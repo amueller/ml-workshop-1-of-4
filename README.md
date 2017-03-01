@@ -57,7 +57,7 @@ Try opening and running a notebook from the material to see check that it works.
 
 For users who do not yet have these  packages installed, a relatively
 painless way to install all the requirements is to use a Python distribution
-such as [Anaconda CE](http://store.continuum.io/ "Anaconda CE"), which includes
+such as [Anaconda](https://www.continuum.io/downloads), which includes
 the most relevant Python packages for science, math, engineering, and
 data analysis; Anaconda can be downloaded and installed for free
 including commercial use and redistribution.
