@@ -10,7 +10,7 @@ Instructor
 ---
 
 This repository will contain the teaching material and other info associated with the "Introduction to Machine Learning"
-course at [ODSC Masterclass 2017](https://odsc.com/masterclass) on March 1st 2017.
+course at [ODSC Masterclass 2017](https://odsc.com/masterclass) on March 2nd 2017.
 
 
 Obtaining the Tutorial Material
