@@ -9,8 +9,8 @@ Instructor
 
 ---
 
-This repository will contain the teaching material and other info associated with the "Introduction to Machine Learning"
-course.
+This repository will contain the teaching material and other info associated
+with the "Introduction to Machine Learning" course.
 
 
 Obtaining the Tutorial Material
