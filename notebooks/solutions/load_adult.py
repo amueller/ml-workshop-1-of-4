@@ -7,16 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 # in Jupyter
 from IPython.display import display
 
-# The file has no headers naming the columns, so we pass header=None
-# and provide the column names explicitly in "names"
-data = pd.read_csv(
-    "adult.data", header=None, index_col=False,
-    names=['age', 'workclass', 'fnlwgt', 'education', 'education-num',
-           'marital-status', 'occupation', 'relationship', 'race', 'gender',
-           'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
-           'income'])
-# this column is somewhat meaningless in this context
-data = data.drop("fnlwgt", axis=1)
+data = pd.read_csv("adult.csv", index_col=0)
 display(data.head())
 
 income = data.income
