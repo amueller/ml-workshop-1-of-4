@@ -1,5 +1,6 @@
 from sklearn.datasets import load_iris
-from sklearn.cross_validation import StratifiedKFold, KFold
+from sklearn.model_selection import StratifiedKFold, KFold, cross_val_score
+from sklearn.svm import LinearSVC
 iris = load_iris()
 X, y = iris.data, iris.target
 

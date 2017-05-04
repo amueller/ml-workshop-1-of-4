@@ -1,6 +1,6 @@
 from sklearn.datasets import load_iris
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 
 iris = load_iris()
 X, y = iris.data, iris.target
