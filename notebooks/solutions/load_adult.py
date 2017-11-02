@@ -7,7 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 # in Jupyter
 from IPython.display import display
 
-data = pd.read_csv("adult.csv", index_col=0)
+data = pd.read_csv("data/adult.csv", index_col=0)
 display(data.head())
 
 income = data.income
@@ -28,5 +28,5 @@ print(y_train.value_counts())
 
 continuous = data.columns[data.dtypes == "int64"]
 colors = (y_train.values == " <=50K").astype(np.int)
-pd.tools.plotting.scatter_matrix(X_train[continuous], c=plt.cm.tab10(colors),
+pd.plotting.scatter_matrix(X_train[continuous], c=plt.cm.tab10(colors),
                                  alpha=.2, figsize=(10, 10));
