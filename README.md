@@ -63,7 +63,8 @@ the most relevant Python packages for science, math, engineering, and
 data analysis; Anaconda can be downloaded and installed for free
 including commercial use and redistribution.
 The code examples in this tutorial should be compatible to Python 2.7,
-Python 3.4, and Python 3.5, though we recommend using Python3.4 or higher.
+Python 3.4 and later. However, it's recommended to use a recent Python version (like
+3.5 or 3.6).
 
 After obtaining the material, we **strongly recommend** you to open and execute
 a Jupyter Notebook `jupter notebook check_env.ipynb` that is located at the
