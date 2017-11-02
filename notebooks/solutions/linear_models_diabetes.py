@@ -36,7 +36,7 @@ print("Ridge regression w/ scaling: {}".format(scores_ridge.mean()))
 
 from sklearn.model_selection import GridSearchCV
 param_grid = {'alpha': np.logspace(-3, 3, 7)}
-grid = GridSearchCV(Ridge(), param_grid, cv=10)
+grid = GridSearchCV(Ridge(), param_grid, cv=10, return_train_score=True)
 grid.fit(X_train_scaled, y_train)
 
 res = pd.DataFrame(grid.cv_results_)
@@ -57,7 +57,7 @@ plt.legend()
 
 from sklearn.model_selection import GridSearchCV
 param_grid = {'alpha': np.logspace(-3, 3, 7)}
-grid_lasso = GridSearchCV(Lasso(), param_grid, cv=10)
+grid_lasso = GridSearchCV(Lasso(), param_grid, cv=10, return_train_score=True)
 grid_lasso.fit(X_train_scaled, y_train)
 
 res = pd.DataFrame(grid_lasso.cv_results_)
@@ -86,7 +86,7 @@ print("Ridge regression poly features: {}".format(scores_ridge.mean()))
 
 from sklearn.model_selection import GridSearchCV
 param_grid = {'alpha': np.logspace(-3, 3, 7)}
-grid = GridSearchCV(Ridge(), param_grid, cv=10)
+grid = GridSearchCV(Ridge(), param_grid, cv=10, return_train_score=True)
 grid.fit(X_train_poly, y_train)
 
 res = pd.DataFrame(grid.cv_results_)
