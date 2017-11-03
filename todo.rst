@@ -1,9 +1,11 @@
-why scaling twice?
+why scaling twice? (in slides the "scaling" stuff should be with the unsupervised stuff?)
 lasso?
 get csv based exercises from the one hour long course
 linear models for classification
 
 linear models: dependency on number of samples?
+
+make sure all tasks are sensible and not redundnat wit hwhat we did.
 
 Solutions Missing
 ------------------
