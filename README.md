@@ -21,10 +21,10 @@ If you are familiar with git, it is probably most convenient if you clone the Gi
 is highly encouraged as it allows you to easily synchronize any changes to the material.
 
 ```
-git clone https://github.com/amueller/ml-training-intro.git
+git clone https://github.com/amueller/ml-workshop-1-of-4.git
 ```
 
-If you are not familiar with git, you can download the repository as a .zip file by heading over to the GitHub repository (https://github.com/amueller/ml-training-intro) in your browser and click the green “Download” button in the upper right.
+If you are not familiar with git, you can download the repository as a .zip file by heading over to the GitHub repository (https://github.com/amueller/ml-workshop-1-of-4) in your browser and click the green “Download” button in the upper right.
 
 ![](images/download-repo.png)
 
