@@ -12,12 +12,29 @@ Instructor
 This repository will contain the teaching material and other info associated
 with the "Introduction to Machine Learning with scikit-learn" course.
 
+About the workshop
+------------------
+Machine learning has become an indispensable tool across many areas of research and commercial applications. From text-to-speech for your phone to detecting the Higgs boson, machine learning excells at extracting knowledge from large amounts of data. This talk will give a general introduction to machine learning, as well as introduce practical tools for you to apply machine learning in your research. We will focus on one particularly important subfield of machine learning, supervised learning. The goal of supervised learning is to "learn" a function that maps inputs x to an output y, by using a collection of training data consisting of input-output pairs. We will walk through formulating a problem as a supervised machine learning problem, creating the necessary training data and applying and evaluating a machine learning algorithm. This workshop should give you all the necessary background to start using machine learning yourself.
+
+Prerequisites
+-------------
+This workshop assumes familiarity with Jupyter notebooks and basics of pandas, matplotlib and numpy.
+
+Content
+-------
+- Types of machine learning, basics of supervised learning
+- Data loading with pandas
+- Data requirements for scikit-learn
+- Building classification and regression models
+- The scikit-learn API
+- Fundamentals of Data Preprocessing
+
 
 Obtaining the Tutorial Material
 --------------------------------
 
 
-If you are familiar with git, it is probably most convenient if you clone the GitHub repository. This
+If you are familiar with git, it is most convenient if you clone the GitHub repository. This
 is highly encouraged as it allows you to easily synchronize any changes to the material.
 
 ```
