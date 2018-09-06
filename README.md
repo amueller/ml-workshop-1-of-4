@@ -1,4 +1,4 @@
-Introduction to Machine learning (with Andreas Mueller)
+Introduction to Machine learning with scikit-learn
 ========================================================
 
 
@@ -10,7 +10,7 @@ Instructor
 ---
 
 This repository will contain the teaching material and other info associated
-with the "Introduction to Machine Learning" course.
+with the "Introduction to Machine Learning with scikit-learn" course.
 
 
 Obtaining the Tutorial Material
