@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Supervised Learning</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Garamond);
+      @import url(https://fonts.googleapis.com/css?family=Muli:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Muli';
+        font-size: 140%;
+      }
+      h1, h2 {
+        font-family: 'Garamond';
+        font-weight: normal;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+        text-align: center;
+      }
+
+      .remark-slide-content p, .remark-slide-content li {
+        font-size:40px;
+        line-height: 1.4;
+      }
+      .remark-code {
+        font-size:30px;
+      }
+      .remark-slide-content p {
+          margin: 5px;
+      }
+      .remark-slide-container .spacious p,
+      .remark-slide-container .spacious li{
+          margin-bottom: 50px;
+          margin-top: 50px;
+      }
+      .remark-slide-container .spacious h1{
+          margin-bottom: 50px;
+      }
+
+      .remark-slide-container .some-space p,
+      .remark-slide-container .some-space li,
+      .remark-slide-container .some-space h1{
+          margin-bottom: 30px;
+      }
+
+      .reset-column {
+          overflow: auto;
+          width: 100%;
+      }
+
+      .remark-slide-content .compact p, .remark-slide-content .compact li, .remark-slide-content .compact pre{
+          font-size: 30px;
+          line-height: 1.1;
+          display: block;
+          margin: 2px 0;
+      } 
+
+      .padding-top {
+          padding-top: 100px;
+      } 
+
+      .remark-slide-content .smaller p, .remark-slide-content .smaller li, .remark-slide-content .smaller .remark-code{
+          font-size: 25px;
+      }
+
+      .remark-slide-content .smallest p, .remark-slide-content .smallest li, .remark-slide-content .smallest .remark-code{
+          font-size: 18px;
+      }
+
+      .normal {
+          font-size: 30px;
+      }
+
+      .quote_author {
+          display: block;
+          text-align: right;
+          margin-top: 20px;
+          font-size: 30px;
+          font-family: 'Garamond';
+      }
+
+      .larger, .larger .remark-code {
+          font-size: 40px;
+      }
+      .largest, .largest .remark-code {
+          font-size: 50px;
+      }
+      .left-column, .right-column {
+          width: 48%;
+      }
+
+      .right-column{
+          float: right;
+      }
+      .left-column{
+          float: left;
+      }
+
+      .narrow-right-column {
+          float: right;
+          width: 32%
+      }
+      .wide-left-column {
+          float: left;
+          width: 65%
+      }
+      .invisible {
+          visibility: hidden
+      }
+
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+### W4995 Applied Machine Learning
+
+# Introduction to Supervised Learning
+
+01/29/18
+
+Andreas C. Müller
+
+???
+
+
+---
+
+class: center
+
+# Supervised Learning
+
+.larger[
+$$ (x_i, y_i) \propto p(x, y) \text{ i.i.d.}$$
+$$ x_i \in \mathbb{R}^p$$
+$$ y_i \in \mathbb{R}$$
+$$f(x_i) \approx y_i$$
+$$f(x) \approx y$$
+]
+???
+As a reminder, in supervised learning, the dataset we learn form is
+input-output pairs $(x_i, y_i)$, where $x_i$ is some n-dimensional input,
+or feature vector, and $y_i$ is the desired output we want to learn to predict.
+We assume these samples are drawn from some unknown joint distribution
+$p(x, y)$.
+You can think of this as there being some (not necessarily deterministic)
+process that goes from $x_i$ to $y_i$, but that we don’t know.
+We try to find a function that approximates the output $y_i$ for each known
+input $x_i$. But we also demand that for new inputs $x$ , and unobserved $y$,
+$f(x)$ is approximately $y$.
+
+I want to go through two simple examples of supervised algorithms today,
+nearest neighbors and nearest centroids.
+---
+class: center
+
+# Nearest Neighbors
+
+![:scale 40%](images/knn_boundary_test_points.png)
+$$f(x) = y_i, i = \text{argmin}_j || x_j - x||$$
+
+???
+Let’s say we have this two-class classification dataset here, with
+two features, one on the x axis and one on the y axis.
+And we have three new points as marked by the stars here.
+If I make a prediction using a one nearest neighbor classifier, what
+will it predict?
+It will predict the label of the closest data point in the training set.
+That is basically the simplest machine learning algorithm I can come
+up with.
+
+Here’s the formula:
+the prediction for a new x is the y_i so that x_i is the closest point
+in the training set.
+Ok, so now how do we find out whether this model is any good?
+---
+class: center
+
+# Nearest Neighbors
+
+![:scale 40%](images/knn_boundary_k1.png)
+
+$$f(x) = y_i, i = \text{argmin}_j || x_j - x||$$
+
+???
+Let’s say we have this two-class classification dataset here, with
+two features, one on the x axis and one on the y axis.
+And we have three new points as marked by the stars here.
+If I make a prediction using a one nearest neighbor classifier, what
+will it predict?
+It will predict the label of the closest data point in the training set.
+That is basically the simplest machine learning algorithm you can think of.
+
+Here’s the formula:
+the prediction for a new x is the y_i so that x_i is the closest point
+in the training set.
+Ok, so now how do we find out whether this model and these predictions are any good?
+---
+class: center
+
+![:scale 60%](images/train_test_set_2d_classification.png)
+
+???
+The simplest way is to split the data into a training and a test set.
+So we take some part of the data set,  let’s say 75% and the
+corresponding output, and train the model, and then apply the model on
+the remaining 25% to compute the accuracy. This test-set accuracy
+will provide an unbiased estimate of future performance.
+So if our i.i.d. assumption is correct, and we get a 90% success
+rate on the test data, we expect about a 90% success rate on any future
+data, for which we don't have labels.
+
+Let's dive into how to build and evaluate this model with scikit-learn.
+---
+# KNN with scikit-learn
+
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(X_train, y_train)
+print("accuracy: {:.2f}".format(knn.score(X_test, y_test)))
+y_pred = knn.predict(X_test)
+```
+accuracy: 0.77
+
+???
+We import train_test_split form model selection, which does a
+random split into 75%/25%.
+We provide it with the data X, which are our two features, and the
+labels y.
+
+As you might already know, all the models in scikit-learn are implemented
+in python classes, with a single object used to build and store the model.
+
+We start by importing our model, the KneighborsClassifier, and instantiate
+it with n_neighbors=1. Instantiating the object is when we set any hyper parameter,
+such as here saying that we only want to look at the neirest neighbor.
+
+Then we can call the fit method to build the model, here knn.fit(X_train,
+y_train)
+All models in scikit-learn have a fit-method, and all the supervised ones take
+the data X and the outcomes y. The fit method builds the model and stores any
+estimated quantities in the model object, here knn.  In the case of nearest
+neighbors, the `fit` methods simply remembers the whole training set.
+
+Then, we can use knn.score to make predictions on the test data, and
+compare them against the true labels y_test.
+
+For classification models, the score method will always compute
+accuracy. 
+
+Just for illustration purposes, I also call the predict method here.
+The predict method is what's used to make predictions on any dataset.
+If we use the score method, it calls predict internally and then
+compares the outcome to the ground truth that's provided.
+
+Who here has not seen this before?
+---
+class: center
+
+# More neighbors
+
+![:scale 50%](images/knn_boundary_k1.png)
+
+???
+So this was the predictions as made by one-nearest neighbor.
+But we can also consider more neighbors, for example three. Here is the
+three nearest neighbors for each of the points and the corresponding
+labels.
+We can then make a prediction by considering the majority among these
+three neighbors.
+And as you can see, in this case all the points changed their labels! (I
+was actually quite surprised when I saw that, I just picked some points
+at random).
+Clearly the number of neighbors that we consider matters a lot. But what
+is the right number?
+The is a problem you’ll encounter a lot in machine learning, the
+problem of tuning parameters of the model, also called hyper-parameters,
+which can not be learned directly from the data.
+---
+class: center
+
+# More neighbors
+
+![:scale 50%](images/knn_boundary_k3.png)
+
+???
+So this was the predictions as made by one-nearest neighbor.
+But we can also consider more neighbors, for example three. Here is the
+three nearest neighbors for each of the points and the corresponding
+labels.
+We can then make a prediction by considering the majority among these
+three neighbors.
+And as you can see, in this case all the points changed their labels! (I
+was actually quite surprised when I saw that, I just picked some points
+at random).
+Clearly the number of neighbors that we consider matters a lot. But what
+is the right number?
+The is a problem you’ll encounter a lot in machine learning, the
+problem of tuning parameters of the model, also called hyper-parameters,
+which can not be learned directly from the data.
+---
+class: center, some-space
+
+# Influence of n_neighbors
+
+![:scale 45%](images/knn_boundary_varying_k.png)
+
+???
+Here’s an overview of how the classification changes if we consider
+different numbers of neighbors.
+You can see as red and blue circles the training data. And the background
+is colored according to which class a datapoint would be assigned to
+for each location.
+For one neighbor, you can see that each point in the training set has
+a little area around it that would be classified according to it’s
+label. This means all the training points would be classified correctly,
+but it leads to a very complex shape of the decision boundary.
+If we increase the number of neighbors, the boundary between red and
+blue simplifies, and with 40 neighbors we mostly end up with a line.
+This also means that now many of the training data points would be
+labeled incorrectly.
+---
+class: center, spacious
+
+# Model complexity
+
+![:scale 75%](images/knn_model_complexity.png)
+
+???
+We can look at this in more detail by comparing training and test set
+scores for the different numbers of neighbors.
+Here, I did a random 75%/25% split again. This is a very noisy plot as
+the dataset is very small and I only did a random split, but you can
+see a trend here.
+You can see that for a single neighbor, the training score is 1 so perfect
+accuracy, but the test score is only 70%.  If we increase the number of
+neighbors we consider, the training score goes down, but the test score
+goes up, with an optimum at 19 and 21, but then both go down again.
+
+This is a very typical behavior, that I sketched in a schematic for you.
+---
+class: center, spacious
+# Overfitting and Underfitting
+
+![:scale 80%](images/overfitting_underfitting_cartoon_train.png)
+
+???
+here is a cartoon version of how this chart looks in general, though
+it's horizontally flipped to the one with saw for knn.
+This chart has accuracy on the y axis, and the abstract concept of model
+complexity on the x axis.
+If we make our machine learning models more complex, we will get better
+training set accuracy, as the model will be able to capture more of the
+variations in the data.
+---
+class: center, spacious
+# Overfitting and Underfitting
+
+![:scale 80%](images/overfitting_underfitting_cartoon_generalization.png)
+
+???
+But if we look at the generalization performance, we get a different
+story. If the model complexity is too low, the model will not be able
+to capture the main trends, and a more complex model means better
+generalization.
+However, if we make the model too complex, generalization performance
+drops again, because we basically learn to memorize the dataset.
+class: center, middle
+
+### W4995 Applied Machine Learning
+
+# Preprocessing and Feature Engineering
+
+02/07/18
+
+Andreas C. Müller
+
+???
+Today we’ll talk about preprocessing and featureengineering. What we’re talking about today mostly
+applies to linear models, and not to tree-based
+models, but it also applies to neural nets and kernel
+SVMs.
+
+FIXME: Yeo-Johnson
+FIXME: box-cox fitting
+FIXME: move scaling motivation before scaling
+FIXME: add illustration of why one-hot is better than integer encoding
+FIXME: add rank scaler
+
+---
+
+class: middle
+
+![:scale 90%](images/boston_scatter.png)
+
+
+???
+Let’s go back to the boston housing dataset. The idea
+was to predict house prices. Here are the features on
+the x axis and the response, so price, on the y axis.
+
+What are some thing you can notice? (concentrated
+distributions, skewed distibutions, discrete variable,
+linear and non-linear effects, different scales)
+
+---
+
+
+class: center, middle
+
+#Scaling
+
+
+???
+N/A
+
+---
+
+class: center, middle
+
+.center[
+![:scale 70%](images/img_2.png)
+]
+
+
+???
+Let’s start with the different scales.
+
+Many model want data that is on the same scale.
+KNearestNeighbors: If the distance in TAX is
+between 300 and 400 then the distance difference in
+CHArS doesn’t matter!
+
+Linear models: the different scales mean different
+penalty. L2 is the same for all!
+
+We can also see non-gaussian distributions here btw!
+---
+class: center
+
+# Ways to Scale Data
+<br />
+![:scale 80%](images/img_3.png)
+???
+StandardScaler: subtract mean, divide by standard
+deviation.
+
+MinMaxScaler: subtract minimum, divide by range.
+Afterwards between 0 and 1.
+
+Robust Scaler: uses median and quantiles, therefore
+robust to outliers. Similar to StandardScaler.
+
+Normalizer: only considers angle, not length. Helpful
+for histograms, not that often used.
+
+StandardScaler is usually good, but doesn’t guarantee
+particular min and max values
+
+---
+class: spacious
+
+# Sparse Data
+
+- Data with many zeros – only store non-zero entries.
+- Subtracting anything will make the data “dense” (no more zeros) and blow the RAM.
+- Only scale, don’t center (use MaxAbsScaler)
+
+???
+You have to be careful if you have sparse data. Sparse
+data is data where most entries of the data-matrix X
+are zero – often only 1% or less are not zero.
+
+You can store this efficiently by only storing the nonzero elements.
+Subtracting the mean results in all features becoming
+non-zero!
+
+So don’t subtract anything, but you can still scale.
+MaxAbsScaler scales between -1 and 1 by dividing
+with the maximum absolute value for each feature.
+---
+# Standard Scaler Example
+
+```python
+from sklearn.linear_model import Ridge
+X, y = boston.data, boston.target
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, random_state=0)
+
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_scaled = scaler.transform(X_train)
+
+ridge = Ridge().fit(X_train_scaled, y_train)
+X_test_scaled = scaler.transform(X_test)
+ridge.score(X_test_scaled, y_test)
+```
+```
+0.634
+```
+
+???
+Here’s how you do the scaling with StandardScaler in
+scikit-learn. Similar interface to models, but
+“transform” instead of “predict”. “transform” is always
+used when you want a new representation of the
+data.
+
+Fit on training set, transform training set, fit ridge on
+scaled data, transform test data, score scaled test
+data.
+
+The fit computes mean and standard deviation on the
+training set, transform subtracts the mean and the
+standard deviation.
+
+We fit on the training set and apply transform on both
+the training and the test set. That means the training
+set mean gets subtracted from the test set, not the
+test-set mean. That’s quite important.
+---
+
+class: center, middle
+
+.center[
+![:scale 100%](images/img_5.png)
+]
+
+???
+
+Here’s an illustration why this is important using the
+min-max scaler. Left is the original data. Center is
+what happens when we fit on the training set and
+then transform the training and test set using this
+transformer. The data looks exactly the same, but the
+ticks changed. Now the data has a minimum of zero
+and a maximum of one on the training set. That’s not
+true for the test set, though. No particular range is
+ensured for the test-set. It could even be outside of 0
+and 1. But the transformation is consistent with the
+transformation on the training set, so the data looks
+the same.
+
+On the right you see what happens when you use the
+test-set minimum and maximum for scaling the test
+set. That’s what would happen if you’d fit again on
+the test set. Now the test set also has minimum at 0
+and maximum at 1, but the data is totally distorted
+from what it was before. So don’t do that.
+---
+
+# Sckit-Learn API Summary
+
+![:scale 90%](images/img_6.png)
+
+Efficient shortcuts:
+
+```python
+est.fit_transform(X) == est.fit(X).transform(X)  # mostly
+est.fit_predict(X) == est.fit(X).predict(X)   # mostly
+```
+
+???
+
+Here’s a summary of the scikit-learn methods.
+All models have a fit method which takes the training data X_train. If
+the model is supervised, such as our classification and regression
+models, they also take a y_train parameter. The scalers don’t use
+a y_train because they don’t use the labels at all – you could say
+they are unsupervised methods, but arguably they are not really
+learning methods at all.
+Models (also known as estimators in scikit-learn) to make a
+prediction of a target variable, you use the predict method, as in
+classification and regression.
+If you want to create a new representation of the data, a new kind of
+X, then you use the transform method, as we did with scaling. The
+transform method is also used for preprocessing, feature
+extraction and feature selection, which we’ll see later. All of these
+change X into some new form.
+There’s two important shortcuts. To fit an estimator and immediately
+transform the training data, you can use fit_transform. That’s often
+more efficient then using first fit and then transform. The same
+goes for fit_predict.
+
+---
+# Scaling and Distances
+
+![:scale 90%](images/knn_scaling.png)
+
+???
+Here is an example of the importance of scaling using a distance-based algorithm, K nearest neighbors.
+My favorite toy dataset with two classes in two dimensions. The scatter plots look identical,
+but on the left hand side, the two axes have very different scales. The x axis has much
+larger values than the y axis.
+On the right hand side, I used standard scaler and so both features have zero mean and unit
+variance.
+So what do you think will happen if I use k nearest neighbors here?
+Let's see
+---
+# Scaling and Distances
+
+![:scale 90%](images/knn_scaling2.png)
+
+???
+As you can see, the difference is quite dramatic. Because the X axis has such a larger magnitude
+on the left-hand side, only distances along the x axis matter. However, the important
+feature for this task is the y axis. So the important feature gets entirely ignored because
+of the different scales.
+And usually the scales don't have any meaning - it could be a matter of changing meters to kilometers.
+
+---
+class: smaller, compact
+
+```python
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import RidgeCV
+scores = cross_val_score(RidgeCV(), X_train, y_train, cv=10)
+np.mean(scores), np.std(scores)
+```
+
+```
+(0.717, 0.125)
+
+```
+
+```python
+scores = cross_val_score(RidgeCV(), X_train_scaled, y_train, cv=10)
+np.mean(scores), np.std(scores)
+```
+
+```
+(0.718, 0.127)
+
+```
+
+```python
+from sklearn.neighbors import KNeighborsRegressor
+scores = cross_val_score(KNeighborsRegressor(), X_train, y_train, cv=10)
+np.mean(scores), np.std(scores)
+```
+
+```
+(0.499, 0.146)
+
+```
+
+```python
+from sklearn.neighbors import KNeighborsRegressor
+scores = cross_val_score(KNeighborsRegressor(), X_train_scaled, y_train, cv=10)
+np.mean(scores), np.std(scores)
+```
+
+```
+(0.750, 0.106)
+
+```
+
+???
+
+Let’s apply the scaler to the Boston housing data.
+
+First I used the StandardScaler to scale the training
+data. Then I applied ten-fold cross-validation to
+evaluate the Ridge model on the data with and
+without scaling. I used RidgeCV which automatically
+picks alpha for me. With and without scaling we get
+an R^2 of about .72, so no difference. Often there is
+a difference for Ridge, but not in this case.
+
+If we use KneighborsRegressor instead, we see a big
+difference. Without scaling R^2 is about .5, and with
+scaling it’s .75. That makes sense since we saw that
+for distance calculations basically all features are
+dominated by the TAX feature.
+
+However, there is a bit of a problem with the analysis
+we did here. Can you see it?
+
+---
+
+class: center, middle
+
+# A note on preprocessing
+# (and pipelines)
+
+???
+
+I want to talk a bit more about preprocessing and
+cross-validation here, and introduce pipelines.
+
+---
+
+class: some-space
+
+#Leaking Information
+
+.left-column[
+Information Leak
+![:scale 100%](images/img_9.png)
+]
+.right-column[
+No Information leakage
+![:scale 100%](images/img_10.png)]
+
+.reset-column[
+Need to include preprocessing in cross-validation !
+]
+
+???
+
+What we did was we trained the scaler on the training data,
+and then applied cross-validation to the scaled data. Tha’s
+what’s show on the left. The problem is that we use the
+information of all of the training data for scaling, so in
+particular the information in the test fold. This is also known
+as information leakage. If we apply our model to new data,
+this data will not have been used to do the scaling, so our
+cross-validation will give us a biased result that might be
+too optimistic.
+
+On the right you can see how we should do it: we should only
+use the training part of the data to find the mean and
+standard deviation, even in cross-validation. That means
+that for each split in the cross-validation, we need to scale
+the data a bit differently. This basically means the scaling
+should happen inside the cross-validation loop, not outside.
+
+In practice, estimating mean and standard deviation is quite
+robust and you will not see a big difference between the
+two methods. But for other preprocessing steps that we’ll
+see later, this might make a huge difference. So we should
+get it right from the start.
+
+---
+class: smaller
+
+```python
+from sklearn.linear_model import Ridge
+X, y = boston.data, boston.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_scaled = scaler.transform(X_train)
+ridge = Ridge().fit(X_train_scaled, y_train)
+
+X_test_scaled = scaler.transform(X_test)
+ridge.score(X_test_scaled, y_test)
+```
+```
+0.634
+```
+
+```python
+from sklearn.pipeline import make_pipeline
+pipe = make_pipeline(StandardScaler(), Ridge())
+pipe.fit(X_train, y_train)
+pipe.score(X_test, y_test)
+```
+```
+0.634
+
+---
+
+class: left, middle
+
+# Feature Distributions
+
+???
+
+Now that we discussed scaling and pipelines, let’s talk
+about some more preprocessing methods. One
+important aspect is dealing with different input
+distributions.
+
+---
+
+class: left, middle
+
+.center[
+![:scale 85%](images/img_17.png)
+]
+
+???
+
+Here is a box plot of the boston housing data after
+transforming it with the standard scaler. Even though
+the mean and standard deviation are the same for all
+features, the distributions are quite different. You can
+see very concentrated distributions like Crim and B,
+and very skewed distribuations like RAD and Tax
+(and also crim and B).
+
+Many models, in particular linear models and neural
+networks, work better if the features are
+approximately normal distributed.
+
+Let’s also check out the histograms of the data to see
+a bit better what’s going on.
+
+---
+
+class: left, middle
+
+.center[
+![:scale 90%](images/boston_hist.png)
+]
+
+???
+
+Clearly CRIM and ZN and B are very peaked, and
+LSTAT and DIS and Age are very asymmetric.
+Sometimes you can use a hack like applying a
+logarithm to the data to get better behaved values.
+There is slightly more rigorous technique though.
+
+---
+
+# Box-Cox Transform
+
+.left-column[
+$$bc_{\lambda}(x) = \cases{\frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0\cr log(x) & \text{if } \lambda = 0 }$$
+
+
+Only applicable for positive x!
+]
+
+.right-column[
+![:scale 90%](images/img_19.png)
+]
+
+.reset-column[
+```python
+# sklearn 0.20-dev
+from sklearn.preprocessing import PowerTransformer
+pt = PowerTransformer(method='box-cox')
+# soon: Yeo-Johnson
+pt.fit(X)
+```
+]
+???
+
+
+The Box-Cox transformation is a family of univariate
+functions to transform your data, parametrized by a
+parameter lambda. For lamda=1 the function is the
+identity, for lambda = 2 it is square, lambda =0 is log
+and there is many other functions in between. For a
+given dataset, a separate parameter lambda is
+determined for each feature, by minimizing the
+skewdness of the data (making skewdness close to
+zero, not close to -inf), so it is more “gaussian”. The
+skewdness of a function is a measure of the
+asymmetry of a function and is 0 for functions that
+are symmetric around their mean.
+Unfortunately the Box-Cox transformation is only
+applicable to positive features.
+
+
+---
+
+.wide-left-column[
+![:scale 85%](images/boston_hist.png)
+]
+
+.narrow-right-column[Before]
+.clear-column[]
+
+.wide-left-column[![:scale 85%](images/boston_hist_boxcox.png)]
+.narrow-right-column[After]
+
+
+???
+
+Here are the histograms of the original data and the
+transformed data. The title of each subplot shows the
+estimated lambda. If the lambda is close to 1, the
+transformation didn’t change much. If it is away from
+1, there was a significant transformation.
+
+You can clearly see the effect on “CRIM” which was
+approximately log-transformed, and lstat and nox
+which were approximately transformed by sqrt.
+
+For the binary CHAS the transformation doesn’t make
+a lot of sense, though.
+
+---
+
+
+.wide-left-column[
+![:scale 85%](images/boston_scatter.png)
+]
+
+.narrow-right-column[Before]
+.clear-column[]
+
+.wide-left-column[![:scale 85%](images/boston_bc_scaled_scatter.png)]
+.narrow-right-column[After]
+
+
+
+???
+
+Here is a comparison of the feature vs response plot
+before and after the box-cox transformation.
+
+The dis, lstat and crim relationships now look a bit
+more obvious and linear.
+
+---
+
+class: left, middle
+
+# Discrete features
+
+---
+
+class: center, middle
+
+# Categorical Variables
+
+.larger[
+$$ \lbrace 'red', 'green', 'blue' \rbrace \subset ℝ^p ? $$
+]
+
+???
+
+Before we can apply a machine learning algorithm, we
+first need to think about how we represent our data.
+
+Earlier, I said x \in R^n. That’s not how you usually get
+data. Often data has units, possibly different units for
+different sensors, it has a mixture of continuous
+values and discrete values, and different
+measurements might be on totally different scales.
+
+First, let me explain how to deal with discrete input
+variables, also known as categorical features. They
+come up in nearly all applications.
+
+Let’s say you have three possible values for a given
+measurement, whether you used setup1 setup2 or
+setup3. You could try to encode these into a single
+real number, say 0, 1 and 2, or e, \pi, \tau.
+
+However, that would be a bad idea for algorithms like
+linear regression
+
+---
+
+class: center, middle
+
+# Categorical Variables
+.center[![:scale 60%](images/img_24.png)]
+
+???
+
+If you encode all three values using the same feature,
+then you are imposing a linear relation between
+them, and in particular you define an order between
+the categories. Usually, there is no semantic ordering
+of the categories, and so we shouldn’t introduce one
+in our representation of the data.
+
+Instead, we add one new feature for each category,
+
+And that feature encodes whether a sample belongs to
+this category or not.
+
+That’s called a one-hot encoding, because only one of
+the three features in this example is active at a time.
+
+You could actually get away with n-1 features, but in
+machine learning that usually doesn’t matter
+
+---
+
+class: center, middle
+
+.center[![:scale 60%](images/img_25.png)]
+.center[![:scale 60%](images/img_26.png)]
+
+???
+N/A
+
+---
+
+class: center, middle
+
+.center[![:scale 50%](images/img_27.png)]
+.left-column[![:scale 30%](images/img_28.png)]
+.right-column[![:scale 50%](images/img_29.png)]
+
+???
+N/A
+
+---
+
+class: center, middle
+
+.center[![:scale 70%](images/img_30.png)]
+
+???
+N/A
+
+---
+class: smaller
+
+#Pandas Categorical Columns
+
+```python
+import pandas as pd
+df = pd.DataFrame({'salary': [103, 89, 142, 54, 63, 219],
+                   'boro': ['Manhattan', 'Queens', 'Manhattan',
+                            'Brooklyn', 'Brooklyn', 'Bronx']})
+
+df['boro'] = pd.Categorical(
+    df.boro, categories=['Manhattan', 'Queens', 'Brooklyn', 'Bronx', 'Staten Island'])
+pd.get_dummies(df)
+```
+```
+   salary  boro_Manhattan  boro_Queens  boro_Brooklyn  boro_Bronx  boro_Staten Island
+0     103               1            0              0           0                   0
+1      89               0            1              0           0                   0
+2     142               1            0              0           0                   0
+3      54               0            0              1           0                   0
+4      63               0            0              1           0                   0
+5     219               0            0              0           1                   0
+```
+
+
+???
+N/A
+
+---
+
+#OneHotEncoder
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+
+df = pd.DataFrame({'salary': [103, 89, 142, 54, 63, 219],
+                   'boro': [0, 1, 0, 2, 2, 3]})
+
+ohe = OneHotEncoder(categorical_features=[0]).fit(df)
+ohe.transform(df).toarray()
+```
+```
+array([[   1.,    0.,    0.,    0.,  103.],
+       [   0.,    1.,    0.,    0.,   89.],
+       [   1.,    0.,    0.,    0.,  142.],
+       [   0.,    0.,    1.,    0.,   54.],
+       [   0.,    0.,    1.,    0.,   63.],
+       [   0.,    0.,    0.,    1.,  219.]])
+```
+
+- Only works for integers right now, not strings.
+
+???
+N/A
+- Fit-transform paradigm ensures train and test-set categories correspond.
+
+
+---
+
+# CategoricalEncoder
+
+```python
+import pandas as pd
+df = pd.DataFrame({'salary': [103, 89, 142, 54, 63, 219],
+                   'boro': ['Manhattan', 'Queens', 'Manhattan',
+                            'Brooklyn', 'Brooklyn', 'Bronx']})
+
+ce = CategoricalEncoder().fit(df)
+ce.transform(df).toarray()
+```
+```
+array([[ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
+       [ 0.,  0.,  0.,  1.,  0.,  0.,  1.,  0.,  0.,  0.],
+       [ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  0.],
+       [ 0.,  1.,  0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.],
+       [ 0.,  1.,  0.,  0.,  0.,  1.,  0.,  0.,  0.,  0.],
+       [ 1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.]])
+```
+
+- Always transforms all columns
+
+???
+- Fit-transform paradigm ensures train and test-set categories correspond.
+
+---
+# The Future
+## CategoricalEncoder + ColumnTransformer
+
+```python
+categorical = df.dtypes == object
+
+preprocess = make_column_transformer(
+    (StandardScaler(), ~categorical),
+    (CategoricalEncoder(), categorical))
+
+model = make_pipeline(preprocess, LogisticRegression())
+```
+
+---
+class: some-space
+
+#OneHot vs Statisticians
+
+- One-hot is redundant (last one is 1 – sum of others)
+- Can introduce co-linearity
+- Can drop one
+- Choice which one matters for penalized models
+- Keeping all can make the model more interpretable
+
+
+???
+N/A
+
+---
+
+class: some-space
+
+#Models Supporting Discrete Features
+
+- In principle:
+  - All tree-based models, naive Bayes
+- In scikit-learn:
+  - None
+- In scikit-learn soon:
+  - Decision trees, random forests
+
+
+???
+N/A
+
+---
+
+class: some-space
+
+#Count-Based Encoding
+
+- For high cardinality categorical features
+- Example: US states, given low samples
+- Instead of 50 one-hot variables, one “response encoded” variable.
+- For regression:
+  - "people in this state have an average response of y”
+- Binary classification:
+  – “people in this state have likelihood p for class 1”
+- Multiclass:
+  – One feature per class: probability distribution
+
+
+???
+N/A
+
+---
+class: compact
+# Example: Adult census, native-country
+.smallest[
+```python
+data = pd.read_csv("adult.csv")
+data.columns
+```
+```
+Index(['age', 'workclass', 'education', 'education-num', 'marital-status',
+'occupation', 'relationship', 'race', 'gender', 'capital-gain', 'capital-loss',
+'hours-per-week', 'native-country', 'income'], dtype='object')
+```
+```python
+data['native-country'].value_counts()
+```
+.left-column[
+```
+ United-States                 29170
+ Mexico                          643
+ ?                               583
+ Philippines                     198
+ Germany                         137
+ Canada                          121
+ Puerto-Rico                     114
+ El-Salvador                     106
+ India                           100
+ Cuba                             95
+ England                          90
+ Jamaica                          81
+ South                            80
+ China                            75
+ Italy                            73
+ Dominican-Republic               70
+```
+]
+.right-column[
+```
+ Vietnam                          67
+ Guatemala                        64
+ Japan                            62
+ Poland                           60
+ Columbia                         59
+ Taiwan                           51
+ Haiti                            44
+ Iran                             43
+ Portugal                         37
+ Nicaragua                        34
+ Peru                             31
+ France                           29
+ Greece                           29
+ Ecuador                          28
+ Ireland                          24
+ Hong                             20
+ Trinadad&Tobago                  19
+ Cambodia                         19
+ Thailand                         18
+ Laos                             18
+ Yugoslavia                       16
+ Outlying-US(Guam-USVI-etc)       14
+ Hungary                          13
+ Honduras                         13
+ Scotland                         12
+ Holand-Netherlands                1
+Name: native-country, dtype: int64
+```
+]
+]
+???
+N/A
+
+---
+.smallest[
+.left-column[
+```
+                              <=50K      >50K
+ ?                           0.749571  0.250429
+ Cambodia                    0.631579  0.368421
+ Canada                      0.677686  0.322314
+ China                       0.733333  0.266667
+ Columbia                    0.966102  0.033898
+ Cuba                        0.736842  0.263158
+ Dominican-Republic          0.971429  0.028571
+ Ecuador                     0.857143  0.142857
+ El-Salvador                 0.915094  0.084906
+ England                     0.666667  0.333333
+ France                      0.586207  0.413793
+ Germany                     0.678832  0.321168
+ Greece                      0.724138  0.275862
+ Guatemala                   0.953125  0.046875
+ Haiti                       0.909091  0.090909
+ Holand-Netherlands          1.000000  0.000000
+ Honduras                    0.923077  0.076923
+ Hong                        0.700000  0.300000
+ Hungary                     0.769231  0.230769
+ India                       0.600000  0.400000
+ Iran                        0.581395  0.418605
+ Ireland                     0.791667  0.208333
+ Italy                       0.657534  0.342466
+ Jamaica                     0.876543  0.123457
+ Japan                       0.612903  0.387097
+ Laos                        0.888889  0.111111
+ Mexico                      0.948678  0.051322
+ Nicaragua                   0.941176  0.058824
+ Outlying-US(Guam-USVI-etc)  1.000000  0.000000
+ Peru                        0.935484  0.064516
+ Philippines                 0.691919  0.308081
+ Poland                      0.800000  0.200000
+ Portugal                    0.891892  0.108108
+ Puerto-Rico                 0.894737  0.105263
+ Scotland                    0.750000  0.250000
+ South                       0.800000  0.200000
+ Taiwan                      0.607843  0.392157
+ Thailand                    0.833333  0.166667
+ Trinadad&Tobago             0.894737  0.105263
+ United-States               0.754165  0.245835
+ Vietnam                     0.925373  0.074627
+ Yugoslavia                  0.625000  0.375000
+```
+]]
+--
+
+.smallest[
+.right-column[
+```
+       frequency               native-country  income
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.263158                         Cuba   <=50K
+        0.245835                United-States   <=50K
+        0.123457                      Jamaica   <=50K
+        0.245835                United-States    >50K
+        0.245835                United-States    >50K
+        0.245835                United-States    >50K
+        0.245835                United-States    >50K
+        0.400000                        India    >50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.250429                            ?    >50K
+        0.051322                       Mexico   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States    >50K
+        0.245835                United-States    >50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States    >50K
+        0.245835                United-States   <=50K
+        0.200000                        South    >50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+        0.245835                United-States   <=50K
+```
+]]
+
+---
+
+class: left, middle
+
+#Feature Engineering
+
+???
+N/A
+
+---
+
+class: center
+
+#Interaction Features
+
+![:scale 70%](images/img_33.png)
+
+???
+N/A
+
+---
+
+class: center
+
+#Interaction Features
+
+![:scale 50%](images/img_34.png)
+
+![:scale 70%](images/img_35.png)
+
+???
+N/A
+
+
+---
+
+class: center, middle
+
+
+![:scale 50%](images/img_36.png)
+
+![:scale 70%](images/img_37.png)
+
+???
+N/A
+
+---
+
+.center[
+![:scale 60%](images/img_38.png)
+]
+
+.smaller[
+```python
+X_i_train, X_i_test, y_train, y_test = train_test_split(
+	X_interaction, y, random_state=0)
+logreg3 = LogisticRegressionCV().fit(X_i_train, y_train)
+logreg3.score(X_i_test, y_test)
+```
+]
+```
+0.960
+```
+
+???
+N/A
+
+---
+
+.center[![:scale 80%](images/img_40.png)]
+
+- One model per gender!
+- Keep original: common model + model for each gender to adjust.
+- Product of multiple categoricals: common model + multiple models to adjust for combinations
+
+
+
+???
+N/A
+
+---
+# More interactions
+.padding-top[
+```
+age articles_bought gender spend$ time_online
+ + Male * (age articles_bought spend$ time_online )
+ + Female * (age articles_bought spend$ time_online )
+ + (age > 20) * (age articles_bought gender spend$ time_online)
+ + (age <= 20) * (age articles_bought gender spend$ time_online)
+ + (age <= 20) * Male * (age articles_bought gender spend$ time_online)
+```
+]
+
+???
+N/A
+
+
+---
+
+class: center
+
+# Polynomial Features
+
+![:scale 60%](images/img_41.png)
+
+
+
+???
+N/A
+
+
+---
+
+class: center
+
+# Polynomial Features
+
+![:scale 60%](images/img_42.png)
+
+
+
+???
+N/A
+
+---
+
+class: spacious
+
+# Polynomial Features
+.small-padding-top[
+- PolynomialFeatures() adds polynomials and interactions.
+- Transformer interface like scalers etc.
+- Create polynomial algorithms with make_pipeline!
+]
+
+???
+N/A
+
+---
+class: smaller
+# Polynomial Features
+
+```python
+from sklearn.preprocessing import PolynomialFeatures
+poly = PolynomialFeatures()
+X_bc_poly = poly.fit_transform(X_bc_scaled)
+print(X_bc_scaled.shape)
+print(X_bc_poly.shape)
+```
+
+```
+(379, 13)
+(379, 105)
+```
+
+```python
+scores = cross_val_score(RidgeCV(), X_bc_scaled, y_train, cv=10)
+np.mean(scores), np.std(scores)
+```
+```
+(0.759, 0.081)
+```
+
+
+```python
+scores = cross_val_score(RidgeCV(), X_bc_poly, y_train, cv=10)
+np.mean(scores), np.std(scores)
+```
+```
+(0.865, 0.080)
+
+```
+
+???
+N/A
+
+---
+
+class: spacious
+
+# Other Features?
+
+- Plot the data, see if there are periodic patterns!
+
+
+???
+N/A
+
+---
+
+class: spacious
+
+# Discretization and Binning
+
+- Loses data.
+- Target-independent might be bad
+- Powerful combined with interactions to create new features!
+
+???
+N/A
+### W4995 Applied Machine Learning
+
+# Imputation and Feature Selection
+
+02/12/18
+
+Andreas C. Müller
+
+???
+FIXME random forest code is confusing because I tried to simplify it. Also: we haven't seen those yet?!
+FIXME mutual information needs better explanation
+
+---
+class: spacious
+
+# Dealing with missing values
+
+- Missing values can be encoded in many ways
+- Numpy has no standard format for it (often np.NaN) - pandas does
+- Sometimes: 999, ???, ?, np.inf, “N/A”, “Unknown“ …
+- Not discussing “missing output” - that’s semi-supervised learning.
+- Often missingness is informative!
+
+???
+
+- Add feature that encodes that data was missing!
+
+FIXME: Better digram for feature selection. What are the hypothesises for the tests
+---
+
+.center[
+![:scale 80%](images/img_1.png)
+]
+
+???
+- Problem : Prediction not for all samples !
+- Accuracy might be biased
+
+
+---
+
+.center[
+![:scale 100%](images/img_2.png)
+]
+
+???
+
+---
+class: spacious
+
+# Imputation Methods
+
+- Mean / Median
+- kNN
+- Regression models
+- Probabilistic models
+
+???
+
+---
+
+# Baseline: Dropping Columns
+
+.smaller[
+```python
+
+from sklearn.linear_model import LogisticRegressionCV
+from sklearn.model_selection import train_test_split, cross_val_score
+X_train, X_test, y_train, y_test = train_test_split(X_, y, stratify=y)
+
+nan_columns = np.any(np.isnan(X_train), axis=0)
+X_drop_columns = X_train[:, ~nan_columns]
+scores = cross_val_score(LogisticRegressionCV(v=5), X_drop_columns, y_train, cv=10)
+np.mean(scores)
+```
+0.772
+]
+
+???
+
+---
+
+# Mean and Median
+
+.center[
+![:scale 100%](images/img_4.png)
+]
+
+???
+
+---
+
+.center[
+![:scale 100%](images/img_5.png)
+]
+
+???
+
+
+---
+
+
+
+```python
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScalar
+
+nan_columns = np.any(np.isnan(X_train), axis = 0)
+X_drop_columns = X_train[:,~nan_columns]
+logreg = make_pipeline(StandardScalar(), LogisticRegression())
+scores = cross_val_score(logreg, X_drop_columns, y_train, cv = 10)
+np.mean(scores)
+```
+0.794
+```python
+mean_pipe = make_pipeline(Imputer(), StandardScalar(),
+                          LogisticRegression())
+scores = cross_val_score(mean_pipe, X_train, y_train, cv =10)
+np.mean(scores)
+```
+0.729
+
+???
+
+
+---
+class: spacious
+
+# KNN Imputation
+
+- Find k nearest neighbors that have non-missing values.
+- Fill in all missing values using the average of the
+neighbors.
+- PR in scikit-learn: https://github.com/scikit-learn/scikit-learn/pull/9212
+
+???
+
+---
+
+# KNN Imputation
+
+.smaller[
+```python
+# Very inefficient didactic implementation
+
+distances = np.zeros((X_train.shape[0], X_train.shape[0]))
+for i, x1 in enumerate(X_train):
+    for j, x2 in enumerate(X_train):
+        dist = (x1 - x2) ** 2
+        nan_mask = np.isnan(dist)
+        distances[i, j] = dist[~nan_mask].mean() * X_train.shape[1]
+        
+neighbors = np.argsort(distances, axis=1)[:, 1:]
+n_neighbors = 3
+
+X_train_knn = X_train.copy()
+for feature in range(X_train.shape[1]):
+    has_missing_value = np.isnan(X_train[:, feature])
+    for row in np.where(has_missing_value)[0]:
+        neighbor_features = X_train[neighbors[row], feature]
+        non_nan_neighbors = neighbor_features[~np.isnan(neighbor_features)]
+        X_train_knn[row, feature] = non_nan_neighbors[:n_neighbors].mean()
+```
+]
+
+???
+
+---
+.smaller[
+```python
+scores = cross_val_score(logreg, X_train_knn, y_train, cv=10)
+np.mean(scores)
+```
+```
+0.849
+```
+]
+
+.center[
+![:scale 70%](images/img_9.png)
+]
+
+???
+
+---
+class: spacious
+
+# Model-Driven Imputation
+
+- Train regression model for missing values
+- Possibly iterate: retrain after filling in
+- Very flexible!
+
+???
+
+---
+class: smaller
+
+# Model-driven Imputation w RF
+
+
+.smaller[
+```python
+rf = RandomForestRegressor(n_estimators=100)
+X_imputed = X_train.copy()
+
+for i in range(10):
+    last = X_imputed.copy()
+    for feature in range(X_train.shape[1]):
+        inds_not_f = np.arange(X_train.shape[1])
+        inds_not_f = inds_not_f[inds_not_f != feature]
+        f_missing = np.isnan(X_train[:, feature])
+        rf.fit(X_imputed[~f_missing][:, inds_not_f], X_train[~f_missing, feature])
+
+        X_imputed[f_missing, feature] = rf.predict(
+            X_imputed[f_missing][:, inds_not_f])
+
+    if (np.linalg.norm(last - X_imputed)) < .5:
+        break
+
+scores = cross_val_score(logreg, X_imputed, y_train, cv=10)
+np.mean(scores)
+```
+0.855
+]
+
+???
+Assumes we did some imputation on X_train before, like mean.
+---
+class: spacious
+
+# Comparision of Imputation Methods
+
+.center[
+![:scale 100%](images/mean_knn_rf_comparison.png)
+]
+
+???
+
+---
+class: spacious
+
+
+# Fancyimpute
+
+- pip install fancyimpute
+- Has many methods – but no fit-transform
+paradigm
+- MICE is iterative and works well often
+- Try different things in practice, MICE might be best
+
+???
+
+---
+
+.center[
+![:scale 60%](images/fancy_impute_comparison.png)
+]
+
+???
+
+---
+class: spacious
+# Applying fancyimpute
+
+```python
+import fancyimpute
+mice = fancyimpute.MICE(verbose=0)
+
+X_train_fancy_mice = mice.complete(X_train)
+scores = cross_val_score(logreg, X_train_fancy_mice, y_train, cv=10)
+scores.mean()
+```
+0.866
+???
+- Again, cheating with the imputation :(
+- This is allowed for the homework because the current tools make it hard to do the right thing.
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script>
+    // Config Remark
+    remark.macros['scale'] = function (percentage) {
+        var url = this;
+        return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+    config_remark = {
+        highlightStyle: 'github',
+        highlightSpans: true,
+        highlightLines: true,
+        ratio: "16:9"
+    };
+      var slideshow = remark.create(config_remark);
+
+    // Configure MathJax
+    MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] /* removed 'code' entry*/
+    }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    </script>
+  </body>
+</html>
