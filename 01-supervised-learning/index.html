@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Supervised Learning</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Garamond);
+      @import url(https://fonts.googleapis.com/css?family=Muli:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Muli';
+        font-size: 140%;
+      }
+      h1, h2 {
+        font-family: 'Garamond';
+        font-weight: normal;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+        text-align: center;
+      }
+
+      .remark-slide-content p, .remark-slide-content li {
+        font-size:40px;
+        line-height: 1.4;
+      }
+      .remark-code {
+        font-size:30px;
+      }
+      .remark-slide-content p {
+          margin: 5px;
+      }
+      .remark-slide-container .spacious p,
+      .remark-slide-container .spacious li{
+          margin-bottom: 50px;
+          margin-top: 50px;
+      }
+      .remark-slide-container .spacious h1{
+          margin-bottom: 50px;
+      }
+
+      .remark-slide-container .some-space p,
+      .remark-slide-container .some-space li,
+      .remark-slide-container .some-space h1{
+          margin-bottom: 30px;
+      }
+
+      .reset-column {
+          overflow: auto;
+          width: 100%;
+      }
+
+      .remark-slide-content .compact p, .remark-slide-content .compact li, .remark-slide-content .compact pre{
+          font-size: 30px;
+          line-height: 1.1;
+          display: block;
+          margin: 2px 0;
+      } 
+
+      .padding-top {
+          padding-top: 100px;
+      } 
+
+      .remark-slide-content .smaller p, .remark-slide-content .smaller li, .remark-slide-content .smaller .remark-code{
+          font-size: 25px;
+      }
+
+      .remark-slide-content .smallest p, .remark-slide-content .smallest li, .remark-slide-content .smallest .remark-code{
+          font-size: 18px;
+      }
+
+      .normal {
+          font-size: 30px;
+      }
+
+      .quote_author {
+          display: block;
+          text-align: right;
+          margin-top: 20px;
+          font-size: 30px;
+          font-family: 'Garamond';
+      }
+
+      .larger, .larger .remark-code {
+          font-size: 40px;
+      }
+      .largest, .largest .remark-code {
+          font-size: 50px;
+      }
+      .left-column, .right-column {
+          width: 48%;
+      }
+
+      .right-column{
+          float: right;
+      }
+      .left-column{
+          float: left;
+      }
+
+      .narrow-right-column {
+          float: right;
+          width: 32%
+      }
+      .wide-left-column {
+          float: left;
+          width: 65%
+      }
+      .invisible {
+          visibility: hidden
+      }
+
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+### W4995 Applied Machine Learning
+
+# Introduction to Supervised Learning
+
+01/29/18
+
+Andreas C. Müller
+
+???
+Hey everybody.
+Today, we’ll be talking more in-depth about supervised learning,
+model evaluation and model selection.
+
+One note on the homeworks. The current status of the repository within the
+applied-ml-spring-18 org is your submission. You won't have do to anything else.
+There has been some confusion about travis, I think most of it got resolved.
+Just to reiterate what I said on piazza, the class shares a pool of workers on travis.
+Right now we only have a single concurrent instance, meaning that the queue contains
+all your builds and there's only one build running at any time.
+You can see the queue on travis.com.
+I posted on Courseworks about auto-cancelling builds. It's a good idea for you to enable
+auto-cancellation for all future homeworks that use travis. Simply go to the
+settings of your repo and flip the switch.
+What that means is that only the last commit in your repo will be built.
+Otherwise travis will queue all your commits. So if you have 10 commits, it'll
+run 9 builds (or rather 9 builds times the size of your build matrix) before
+it gets to your current commit. And that's how we ended up with such a long queue.
+
+I'm also trying to get more workers from travis. One other thing you can do is
+test the continuous integration on a repository that belongs to you.
+You can fork the repository you get within the class org, and run travis on that.
+If you do that, you'll have your own private worker and things will go much faster.
+But make sure to keep the repository private. You can get a free account on
+travis.com with your columbia email address.
+
+Ok, so from now on I'll assume you mastered git and version control and github and testing,
+and we'll focus on machine learning.
+
+Let's dive back into supervised learning.
+
+---
+
+class: center
+
+# Supervised Learning
+
+.larger[
+$$ (x_i, y_i) \propto p(x, y) \text{ i.i.d.}$$
+$$ x_i \in \mathbb{R}^p$$
+$$ y_i \in \mathbb{R}$$
+$$f(x_i) \approx y_i$$
+$$f(x) \approx y$$
+]
+???
+As a reminder, in supervised learning, the dataset we learn form is
+input-output pairs $(x_i, y_i)$, where $x_i$ is some n-dimensional input,
+or feature vector, and $y_i$ is the desired output we want to learn to predict.
+We assume these samples are drawn from some unknown joint distribution
+$p(x, y)$.
+You can think of this as there being some (not necessarily deterministic)
+process that goes from $x_i$ to $y_i$, but that we don’t know.
+We try to find a function that approximates the output $y_i$ for each known
+input $x_i$. But we also demand that for new inputs $x$ , and unobserved $y$,
+$f(x)$ is approximately $y$.
+
+I want to go through two simple examples of supervised algorithms today,
+nearest neighbors and nearest centroids.
+---
+class: center
+
+# Nearest Neighbors
+
+![:scale 40%](images/knn_boundary_test_points.png)
+$$f(x) = y_i, i = \text{argmin}_j || x_j - x||$$
+
+???
+Let’s say we have this two-class classification dataset here, with
+two features, one on the x axis and one on the y axis.
+And we have three new points as marked by the stars here.
+If I make a prediction using a one nearest neighbor classifier, what
+will it predict?
+It will predict the label of the closest data point in the training set.
+That is basically the simplest machine learning algorithm I can come
+up with.
+
+Here’s the formula:
+the prediction for a new x is the y_i so that x_i is the closest point
+in the training set.
+Ok, so now how do we find out whether this model is any good?
+---
+class: center
+
+# Nearest Neighbors
+
+![:scale 40%](images/knn_boundary_k1.png)
+
+$$f(x) = y_i, i = \text{argmin}_j || x_j - x||$$
+
+???
+Let’s say we have this two-class classification dataset here, with
+two features, one on the x axis and one on the y axis.
+And we have three new points as marked by the stars here.
+If I make a prediction using a one nearest neighbor classifier, what
+will it predict?
+It will predict the label of the closest data point in the training set.
+That is basically the simplest machine learning algorithm you can think of.
+
+Here’s the formula:
+the prediction for a new x is the y_i so that x_i is the closest point
+in the training set.
+Ok, so now how do we find out whether this model and these predictions are any good?
+---
+class: center
+
+![:scale 60%](images/train_test_set_2d_classification.png)
+
+???
+The simplest way is to split the data into a training and a test set.
+So we take some part of the data set,  let’s say 75% and the
+corresponding output, and train the model, and then apply the model on
+the remaining 25% to compute the accuracy. This test-set accuracy
+will provide an unbiased estimate of future performance.
+So if our i.i.d. assumption is correct, and we get a 90% success
+rate on the test data, we expect about a 90% success rate on any future
+data, for which we don't have labels.
+
+Let's dive into how to build and evaluate this model with scikit-learn.
+---
+# KNN with scikit-learn
+
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(X_train, y_train)
+print("accuracy: {:.2f}".format(knn.score(X_test, y_test)))
+y_pred = knn.predict(X_test)
+```
+accuracy: 0.77
+
+???
+We import train_test_split form model selection, which does a
+random split into 75%/25%.
+We provide it with the data X, which are our two features, and the
+labels y.
+
+As you might already know, all the models in scikit-learn are implemented
+in python classes, with a single object used to build and store the model.
+
+We start by importing our model, the KneighborsClassifier, and instantiate
+it with n_neighbors=1. Instantiating the object is when we set any hyper parameter,
+such as here saying that we only want to look at the neirest neighbor.
+
+Then we can call the fit method to build the model, here knn.fit(X_train,
+y_train)
+All models in scikit-learn have a fit-method, and all the supervised ones take
+the data X and the outcomes y. The fit method builds the model and stores any
+estimated quantities in the model object, here knn.  In the case of nearest
+neighbors, the `fit` methods simply remembers the whole training set.
+
+Then, we can use knn.score to make predictions on the test data, and
+compare them against the true labels y_test.
+
+For classification models, the score method will always compute
+accuracy. 
+
+Just for illustration purposes, I also call the predict method here.
+The predict method is what's used to make predictions on any dataset.
+If we use the score method, it calls predict internally and then
+compares the outcome to the ground truth that's provided.
+
+Who here has not seen this before?
+---
+class: center
+
+# More neighbors
+
+![:scale 50%](images/knn_boundary_k1.png)
+
+???
+So this was the predictions as made by one-nearest neighbor.
+But we can also consider more neighbors, for example three. Here is the
+three nearest neighbors for each of the points and the corresponding
+labels.
+We can then make a prediction by considering the majority among these
+three neighbors.
+And as you can see, in this case all the points changed their labels! (I
+was actually quite surprised when I saw that, I just picked some points
+at random).
+Clearly the number of neighbors that we consider matters a lot. But what
+is the right number?
+The is a problem you’ll encounter a lot in machine learning, the
+problem of tuning parameters of the model, also called hyper-parameters,
+which can not be learned directly from the data.
+---
+class: center
+
+# More neighbors
+
+![:scale 50%](images/knn_boundary_k3.png)
+
+???
+So this was the predictions as made by one-nearest neighbor.
+But we can also consider more neighbors, for example three. Here is the
+three nearest neighbors for each of the points and the corresponding
+labels.
+We can then make a prediction by considering the majority among these
+three neighbors.
+And as you can see, in this case all the points changed their labels! (I
+was actually quite surprised when I saw that, I just picked some points
+at random).
+Clearly the number of neighbors that we consider matters a lot. But what
+is the right number?
+The is a problem you’ll encounter a lot in machine learning, the
+problem of tuning parameters of the model, also called hyper-parameters,
+which can not be learned directly from the data.
+---
+class: center, some-space
+
+# Influence of n_neighbors
+
+![:scale 45%](images/knn_boundary_varying_k.png)
+
+???
+Here’s an overview of how the classification changes if we consider
+different numbers of neighbors.
+You can see as red and blue circles the training data. And the background
+is colored according to which class a datapoint would be assigned to
+for each location.
+For one neighbor, you can see that each point in the training set has
+a little area around it that would be classified according to it’s
+label. This means all the training points would be classified correctly,
+but it leads to a very complex shape of the decision boundary.
+If we increase the number of neighbors, the boundary between red and
+blue simplifies, and with 40 neighbors we mostly end up with a line.
+This also means that now many of the training data points would be
+labeled incorrectly.
+---
+class: center, spacious
+
+# Model complexity
+
+![:scale 75%](images/knn_model_complexity.png)
+
+???
+We can look at this in more detail by comparing training and test set
+scores for the different numbers of neighbors.
+Here, I did a random 75%/25% split again. This is a very noisy plot as
+the dataset is very small and I only did a random split, but you can
+see a trend here.
+You can see that for a single neighbor, the training score is 1 so perfect
+accuracy, but the test score is only 70%.  If we increase the number of
+neighbors we consider, the training score goes down, but the test score
+goes up, with an optimum at 19 and 21, but then both go down again.
+
+This is a very typical behavior, that I sketched in a schematic for you.
+---
+class: center, spacious
+# Overfitting and Underfitting
+
+![:scale 80%](images/overfitting_underfitting_cartoon_train.png)
+
+???
+here is a cartoon version of how this chart looks in general, though
+it's horizontally flipped to the one with saw for knn.
+This chart has accuracy on the y axis, and the abstract concept of model
+complexity on the x axis.
+If we make our machine learning models more complex, we will get better
+training set accuracy, as the model will be able to capture more of the
+variations in the data.
+---
+class: center, spacious
+# Overfitting and Underfitting
+
+![:scale 80%](images/overfitting_underfitting_cartoon_generalization.png)
+
+???
+But if we look at the generalization performance, we get a different
+story. If the model complexity is too low, the model will not be able
+to capture the main trends, and a more complex model means better
+generalization.
+However, if we make the model too complex, generalization performance
+drops again, because we basically learn to memorize the dataset.
+
+---
+class: center, spacious
+# Overfitting and Underfitting
+
+![:scale 80%](images/overfitting_underfitting_cartoon_full.png)
+
+???
+If we use too simple a model, this is often called underfitting, while
+if we use to complex a model, this is called overfitting. And somewhere
+in the middle is a sweet spot.
+Most models have some way to tune model complexity, and we’ll see many
+of them in the next couple of weeks.
+So going back to nearest neighbors, what parameters correspond to high
+model complexity and what to low model complexity? high n_neighbors =
+low complexity!
+---
+class: center
+# Nearest Centroid
+
+![:scale 35%](images/nearest_centroid_boundary.png)
+
+$$f(x) = \text{argmin}_{i \in Y} ||\bar{x}_i - x||$$
+
+???
+Before we go to more techniques to find the right hyper parameters,
+I want to introduce another simple model, nearest centroid.
+The nearest centroid model simply computes the centroid, or the mean of
+each class, and classifies each point by which centroid is the closest.
+You can write that down as a formula such as here, where x_i bar is the
+centroid, and I runs over the classes.
+You can see that this yields a linear decision boundary between the
+two classes.
+---
+# Nearest Centroid with scikit-learn
+
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+from sklearn.neighbors import NearestCentroid
+nc = NearestCentroid()
+nc.fit(X_train, y_train)
+print("accuracy: {:.2f}".format(nc.score(X_test, y_test)))
+```
+
+```
+accuracy: 0.62
+```
+
+???
+Again, we can easily build this model with scikit-learn and evaluate it
+using a test set.
+We use the train_test_split function to split the data into 75% training
+and 25% test data,
+import the nearest centroid model, fit it on the training set, and
+compute the accuracy on the test set.
+In this case, the fit method computes the mean or centroid of each class
+and stores it in the nc object, while for prediction 
+
+Questions so far?
+---
+class: center
+# Nearest Shrunken Centroid
+
+![:scale 70%](images/nearest_shrunken_centroid_boundary.png)
+
+![:scale 30%](images/nearest_shrunken_centroid_thresholding.png)
+
+???
+There’s a variant of the nearest centroid called the nearest shrunken
+centroid, which allows you to limit model complexity.
+In nearest shrunken centroid, you pick a positive shrinking threshold, and
+then you apply the soft-threshold function here to each of the centroids.
+The soft-thresholding function shrinks each component of a vector towards
+zero by the threshold, and if that would cross zero, to set this component
+to zero.
+Actually the mean of the data is subtracted beforehand so that this
+makes sense ;)
+
+What that means is that if the centroids have an entry that is close to
+zero, this direction gets ignored.
+Here you can see different settings of the shrinking threshold. No
+shrinking, a threshold of .4 and a threshold of .8.
+Because the centers are less than .5 apart from the data mean, the last
+panel has a perfectly horizontal line.
+
+When do you think NC works better than KNN? High dimensions!
+---
+# Computational Properties Centroids
+???
+I want to compare some computational properties of the nearest shrunken
+centroid and k nearest neighbors.
+What do you think are the important computational properties of machine
+learning models?
+There are basically three: time to build the model, memory to store the
+model, and time to make a prediction.
+What are those?
+Fit time is simple, it’s computing the centroids which is n *
+p. Basically we need to look at each feature exactly once.
+Memory is storing the centroids, which is number of classes times number
+of features, and predict time
+is computing the distance to each of them, which is the same. When is
+this slow? Basically never - in high dim with only few important, maybe
+trees could be better, but we could also shrink those dimensions away.
+
+--
+
+- fit: O(n * p)
+- memory: O(n_classes * p)
+- predict: O(n_classes * p)
+
+n = n_samples
+p = n_features
+
+---
+# Computational Properties Neighbors
+.left-column[
+## Naive
+- fit: no time
+- memory: O(n * p)
+- predict: O(n * p)
+]
+.invisible[.right-column[
+## Kd-tree
+- fit: O(p * n log n)
+- memory: O(n * p)
+- predict:
+- O(k * log(n))<br />
+  FOR FIXED p!
+]]
+.reset-column[
+n=n_samples
+p=n_features
+]
+
+???
+Ok, now for the k nearest neighbors. How would you implement this? (brute
+force or neighbors structure)
+When not using a structure: fit no time, memory is the whole dataset,
+and prediction requires comparing against all data points.
+If we create a kd-tree or ball tree?
+Fit takes O(n log n), memory is the same. Prediction might be faster in
+low dimensions.
+
+What’s bad about this?
+memory scales with data, prediction speed scales with data :-/
+
+Can have high complexity models though.
+When would you use one vs the other? Large datasets , high dimensions:
+use nearest centroid maybe.
+---
+# Computational Properties Neighbors
+.left-column[
+## Naive
+- fit: no time
+- memory: O(n * p)
+- predict: O(n * p)
+]
+.right-column[
+## Kd-tree
+- fit: O(p * n log n)
+- memory: O(n * p)
+- predict:
+- O(k * log(n))<br />
+  FOR FIXED p!
+]
+.reset-column[
+n=n_samples
+p=n_features
+]
+
+???
+Ok, now for the k nearest neighbors. How would you implement this? (brute
+force or neighbors structure)
+When not using a structure: fit no time, memory is the whole dataset,
+and prediction requires comparing against all data points.
+If we create a kd-tree or ball tree?
+Fit takes O(n log n), memory is the same. Prediction might be faster in
+low dimensions.
+
+What’s bad about this?
+memory scales with data, prediction speed scales with data :-/
+
+Can have high complexity models though.
+When would you use one vs the other? Large datasets , high dimensions:
+use nearest centroid maybe.
+---
+# Parametric and non-parametric models
+
+- Parametric model:
+Number of “parameters” (degrees of freedom) independent of data.
+
+- Non-parametric model:
+Degrees of freedom increase with more data.
+
+???
+These two models are examples of two general families of machine learning
+models, parametric models and non-parametric models.
+Anyone know what they are?
+Parametric models have a fixed set of parameters that are learned from
+the data, such as the centroids.
+There are always n_classes * n_features many numbers, no matter how much
+data you have.
+Non-parametric models scale their complexity with data, such as nearest
+neighbors. More data here means more complex decision boundaries, and
+more numbers to store.
+Examples?
+Trees and forests and kernel SVMs are non-parametric, linear models parametric,
+neural nets parametric (arguably, since they have sooo many parameters).
+
+---
+
+class: center, spacious
+# Overfitting and Underfitting
+
+![:scale 80%](images/overfitting_underfitting_cartoon_full.png)
+???
+Coming back to this chart, you usually find that non-parametric models
+are more likely to overfit, as they can increase their capacity to fit
+any dataset, while in some cases, a parametric model might not be able
+to fit some data.
+Again, neural networks are somewhat their own thing, as usually people
+choose networks that could learn any possible data.
+---
+class: center, middle
+
+![:scale 80%](images/knn_vs_nearest_centroid.png)
+???
+Here is a very simple example where a nearest neighbor algorithm might
+work, while nearest centroid fails because it is limited to linear
+decision boundaries.
+We’ll talk more about linear decision boundaries and their strength
+and weaknesses on Wednesday.
+
+Now, I want to talk more about how to adjust the parameters in these
+models - or really, in any model.
+
+---
+class: center, middle
+
+![:scale 80%](images/train_test_set_2d_classification.png)
+
+???
+So far we’ve work with a split of the data into a training and a test
+set, build the model on the training set, and evaluated on the test set.
+So now, lets say we want to adjust the parameter n_neigbhbors in k
+neighbors algorithm, how could we do this?
+[split, try out different values of k, choose the best on test set]
+What’s the problem with that?
+- good for choosing k, overly optimistic for getting accuracy!
+---
+# Overfitting the validation set
+.smaller[
+```python
+from sklearn.datasets import load_breast_cancer
+from sklearn.preprocessing import scale
+
+data = load_breast_cancer()
+X, y = data.data, data.target
+X = scale(X)
+
+X_trainval, X_test, y_trainval, y_test = train_test_split(X, y)
+X_train, X_val, y_train, y_val = train_test_split(
+    X_trainval, y_trainval)
+
+knn = KNeighborsClassifier(n_neighbors=5).fit(X_train, y_train)
+
+print("Validation: {:.3f}".format(knn.score(X_val, y_val)))
+print("Test: {:.3f}".format(knn.score(X_test, y_test)))
+```
+```
+Validation: 0.972
+Test: 0.965
+```
+]
+???
+So I’ll try to illustrate this concept of overfitting the test
+set. Basically, the idea is that if you try out too many things on the
+test set, you will learn about noise in the test set, and this knowledge
+will not generalize to new data.
+
+So here I give you an example with the breast cancer dataset that’s
+build into scikit-learn.
+I split the data twice, now I have a training, a validation and a
+test set.
+I build a nearest neighbors model on the training set, and apply it to
+the test set and the validation set.
+The results are not the same, but they are pretty close. That they are
+different is a consequence of the small dataset and the noisy data.
+---
+# Overfitting the validation set
+
+```python
+val = []
+test = []
+
+for i in range(1000):
+    rng = np.random.RandomState(i)
+    noise = rng.normal(scale=.1, size=X_train.shape)
+    knn = KNeighborsClassifier(n_neighbors=5)
+    knn.fit(X_train + noise, y_train)
+    val.append(knn.score(X_val, y_val))
+    test.append(knn.score(X_test, y_test))
+
+print("Validation: {:.3f}".format(np.max(val)))
+print("Test: {:.3f}".format(test[np.argmax(val)]))
+```
+
+```
+Validation: 1.000
+Test: 0.958
+```
+
+???
+So now let me propose a silly way to tune my classifier.
+I add random noise to my training set for fitting.
+And I repeat that 1000 times, and I check which of these thousand runs
+has the best performance on the validation set. That particular run has
+100% percent accuracy, quite a bit better than before.
+If I would use the same set to estimate how well my model is, I would think
+I created a perfect model and I should write a paper about building much
+better models by using noise.
+
+But if I test the same model on the test set, I get a lower accuracy then
+before: the noise I added was good for the validation set, but not the
+test set.
+The lesson is: If I try something often enough, be it parameters or noise, at some point I'll
+get better performance on the validation set, but that doesn’t mean it will be good for any new data.
+By selecting the best among many you introduce a bias, and the validation
+accuracy is not a good measure of generalization performance any more.
+
+---
+
+# Threefold split
+.padding-top[
+![:scale 100%](images/threefold_split.png)
+]
+???
+The simplest way to combat this overfitting to the test set is by using
+a three-fold split of the data, into a training, a validation and a
+test set as we just did.
+We use the training set for model building, the validation set for
+parameter selection and the test set for a final evaluation of the model.
+So how many models should you try out on the test set? Only one! Ideally
+use use the test-set exactly once, otherwise you make a multiple
+hypothesis testing error!
+
+What are downsides of this? We lose a lot of data for evaluation, and
+the results depend on the particular sampling.
+--
+<br />
+
+pro: fast, simple
+
+con: high variance, bad use of data
+
+
+---
+# Implementing threefold split
+
+.smaller[
+```python
+X_trainval, X_test, y_trainval, y_test = train_test_split(X, y)
+X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval)
+
+val_scores = []
+neighbors = np.arange(1, 15, 2)
+for i in neighbors:
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_train, y_train)
+    val_scores.append(knn.score(X_val, y_val))
+print("best validation score: {:.3f}".format(np.max(val_scores)))
+best_n_neighbors = neighbors[np.argmax(val_scores)]
+print("best n_neighbors: {}".format(best_n_neighbors))
+
+knn = KNeighborsClassifier(n_neighbors=best_n_neighbors)
+knn.fit(X_trainval, y_trainval)
+print("test-set score: {:.3f}".format(knn.score(X_test, y_test)))
+```
+
+```
+best validation score: 0.991
+best n_neighbors: 11
+test-set score: 0.951
+```
+]
+???
+Here is an implementation of the three-fold split for selecting the
+number of neighbors.
+For each number of neighbors that we want to try, we build a model on
+the training set, and evaluate it on the validation set.
+We then pick the best validation set score, here that’s 97.2%, achieved
+when using three neighbors.
+We then retrain the model with this parameter, and evaluate on the test set.
+The retraining step is somewhat optional. We could also just use the best
+model. But retraining allows us to make better use of all the data.
+
+Still, depending on the test-set size we might be using only 70% or 80%
+of the data, and our results depend on how exactly we split the datasets.
+So how can we make this more robust?
+---
+# Cross-validation
+.padding-top[
+![:scale 100%](images/kfold_cv.png)]
+???
+The answer is of course cross-validation. In cross-validation, you split
+your data into multiple folds, usually 5 or 10, and built multiple models.
+You start by using fold1 as the test data, and the remaining ones as the
+training data. You build your model on the training data, and evaluate
+it on the test fold.
+For each of the splits of the data, you get a model evaluation and a
+score. In the end, you can aggregate the scores, for example by taking
+the mean.
+What are the pros and cons of this?
+Each data point is in the test-set exactly once!
+Takes 5 or 10 times longer!
+Better data use (larger training sets).
+Does that solve all problems? No, it replaces only one of the splits,
+usually the inner one!
+--
+<br \>
+
+pro: more stable, more data
+
+con: slower
+
+???
+
+---
+
+class: center, some-space
+# Cross-validation + test set
+
+![:scale 70%](images/grid_search_cross_validation.png)
+
+???
+Here is how the workflow looks like when we are using five-fold
+cross-validation together with a test-set split for adjusting parameters.
+We start out by splitting of the test data, and then we perform
+cross-validation on the training set.
+Once we found the right setting of the parameters, we retrain on the
+whole training set and evaluate on the test set.
+---
+# Grid-Search with Cross-Validation
+
+.smaller[
+```python
+from sklearn.model_selection import cross_val_score
+
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+cross_val_scores = []
+
+for i in neighbors:
+    knn = KNeighborsClassifier(n_neighbors=i)
+    scores = cross_val_score(knn, X_train, y_train, cv=10)
+    cross_val_scores.append(np.mean(scores))
+    
+print("best cross-validation score: {:.3f}".format(np.max(cross_val_scores)))
+best_n_neighbors = neighbors[np.argmax(cross_val_scores)]
+print("best n_neighbors: {}".format(best_n_neighbors))
+
+knn = KNeighborsClassifier(n_neighbors=best_n_neighbors)
+knn.fit(X_train, y_train)
+print("test-set score: {:.3f}".format(knn.score(X_test, y_test)))
+```
+
+```
+best cross-validation score: 0.967
+best n_neighbors: 9
+test-set score: 0.965
+```
+]
+
+???
+Here is an implementation of this  for k nearest neighbors.
+
+We split the data, then we iterate over all parameters and for each of
+them we do cross-validation.
+
+We had seven different values of n_neighbors, and we are running 10 fold
+cross-validation. How many models to we train in total?
+10 * 7 + 1 = 71 (the one is the final model)
+---
+class: center, middle
+![:scale 80%](images/gridsearch_workflow.png)
+
+???
+Here is a conceptual overview of this way of tuning parameters, we start
+of with the dataset and a candidate set of parameters we want to try,
+labeled parameter grid, for example the number of neighbors.
+
+We split the dataset in to training and test set. We use cross-validation
+and the parameter grid to find the best parameters.
+We use the best parameters and the training set to build a model with
+the best parameters,
+and finally evaluate it on the test set.
+---
+# Nested Cross-Validation
+
+- Replace outer split by CV loop
+- Doesn’t yield single model
+(inner loop might have different best parameter settings)
+- Takes a long time, not that useful in practice
+
+???
+We could additionally replace the outer split of the data by
+cross-validation. That would yield what’s known as nested
+cross-validation.
+This is sometimes interesting when comparing different models, but it will
+not actually yield one final model. It will yield one model for each loop
+of the outer fold, which might have different settings of the parameters.
+Also, this takes a really long time to train, by an additional factor
+of 5 or 10, so this is not used very commonly in practice.
+
+But let’s dive into the cross-validation a bit more.
+---
+class: center, middle
+# Cross-Validation Strategies
+
+???
+So I mentioned k-fold cross validation, where k is usually 5 or ten,
+but there are many other strategies.
+
+One of the most commonly ones is stratified k-fold cross-validation.
+---
+# StratifiedKFold
+
+![:scale 100%](images/stratified_cv.png)
+
+Stratified:
+Ensure relative class frequencies in each fold reflect relative class
+frequencies on the whole dataset.
+
+???
+The idea behind stratified k-fold cross-validation is that you want the
+test set to be as representative of the dataset as possible.
+StratifiedKFold preserves the class frequencies in each fold to be the
+same as of the overall dataset.
+Here is and example of a dataset with three classes that are ordered. If
+you apply standard three-fold to this, the first third of the data would
+be in the first fold, the second in the second fold and the third in
+the third fold. Because this data is sorted, that would be particularly
+bad. If you use stratified cross-validation it would make sure that each
+fold has exactly 1/3 of the data from each class.
+
+This is also helpful if your data is very imbalanced. If some of the
+classes are very rare, it could otherwise happen that a class is not
+present at all in a particular fold.
+---
+# Defaults in scikit-learn
+
+- Three-fold is default number of folds
+- For classification cross-validation is stratified
+- train_test_split has stratify option:
+train_test_split(X, y, stratify=y)
+
+- No shuffle by default!
+
+???
+Before we go to the other strategies, I wanted to point out the default
+behavior in scikit-learn.
+By default, all cross-validation strategies are three-fold.
+If you do cross-validation for classification, it will be stratified
+by default.
+Because of how the interface is done, that’s not true for
+train_test_split and if you want a stratified train_test_split, which
+is always a good idea, you should use stratify=y
+Another thing that’s important to keep in mind is that by default
+scikit-learn doesn’t shuffle! So if you run cross-validation twice
+with the default parameters, it will yield exactly the same results.
+---
+class: spacious
+# Repeated KFold and LeaveOneOut
+
+- LeaveOneOut : KFold(n_folds=n_samples)
+High variance, takes a long time
+
+- Better: RepeatedKFold.
+Apply KFold or StratifiedKFold multiple times with shuffled data. Reduces
+variance!
+
+???
+If you want even better estimates of the generalization performance,
+you could try to increase the number of folds, with the extreme
+of creating one fold per sample. That’s called “LeaveOneOut
+cross-validation”. However, because the test-set is so small every time,
+and the training sets all have very large overlap, this method has very
+high variance.
+A better way to get a robust estimate is to run 5-fold or 10-fold
+cross-validation multiple times, while shuffling the dataset.
+---
+# ShuffleSplit / StratifiedShuffleSplit
+.padding-top[
+![:scale 100%](images/shuffle_split_cv.png)]
+
+???
+Another interesting variant is shuffle split and stratified shuffle
+split. In shuffle split, we repeatedly sample disjoint training and test
+sets randomly.
+You only have to specify the number of iterations, the training set size
+and the test set size. This also allows you to run many iterations with
+reasonably large test-sets.
+It’s also great if you have a very large training set and you want to
+subsample it to get quicker results.
+---
+# GroupKFold
+
+.padding-top[
+![:scale 100%](images/group_kfold.png)]
+
+???
+A somewhat more complicated approach is group k-fold.
+This is actually for data that doesn’t fulfill our IID assumption and
+has correlations between samples.
+The idea is that there are several groups in the data that each contain
+highly correlated samples.
+You could think about patient data where you have multiple samples for
+each patient, then the groups would be which patient a measurement was
+taken from.
+If you want to know how well your model generalizes to new patients,
+you need to ensure that the measurements from each patient are either
+all in the training set, or all in the test set.
+And that’s what GroupKFold does.
+In this example, there are four groups, and we want three folds. The
+data is divided such that each group is contained in exactly one fold.
+There are several other cross-validation methods in scikit-learn that
+use these groups.
+
+---
+# TimeSeriesSplit
+.padding-top[
+![:scale 100%](images/time_series_cv.png)]
+
+???
+Another common case of data that’s not independent is time
+series. Usually todays stock price is correlated with yesterdays and
+tomorrows. If you randomly split time series, this makes predictions
+deceivingly simple. In applications, you usually have data up to some
+point, and then try to make predictions for the future, in other words,
+you’re trying to make a forecast.
+The TimeSeriesSplit in scikit-learn simulates that, by taking increasing
+chunks of data from the past and making predictions on the next
+chunk. This is quite different from the other was to do cross-validation,
+in that the training sets are all overlapping, but it’s more appropriate
+for time-series.
+---
+# Using Cross-Validation Generators
+
+.smaller[
+```python
+from sklearn.model_selection import KFold, StratifiedKFold, ShuffleSplit
+kfold = KFold(n_splits=5)
+skfold = StratifiedKFold(n_splits=5, shuffle=True)
+ss = ShuffleSplit(n_splits=20, train_size=.4, test_size=.3)
+
+print("KFold:\n{}".format(
+      cross_val_score(KNeighborsClassifier(), X, y, cv=kfold)))
+
+print("StratifiedKFold:\n{}".format(
+      cross_val_score(KNeighborsClassifier(), X, y, cv=skfold)))
+
+print("ShuffleSplit:\n{}".format(
+      cross_val_score(KNeighborsClassifier(), X, y, cv=ss)))
+```
+
+```
+KFold:
+[ 0.93  0.96  0.96  0.98  0.96]
+StratifiedKFold:
+[ 0.97  0.95  0.98  0.96  0.96]
+ShuffleSplit:
+[ 0.93  0.96  0.95  0.98  0.95  0.98  0.97  0.95  0.96  0.96  0.99  0.96
+  0.96  0.96  0.98  0.96  0.95  0.95  0.96  0.96]
+```
+]
+???
+FIXME: repeated kfold
+Ok, so how do we use these cross-validation generators? We can simply
+pass the object to the cv parameter of the cross_val_score function,
+instead of passing a number. Then that generator will be used.
+Here are some examples for k-neighbors classifier.
+We instantiate a Kfold object with the number of splits equal to 5,
+and then pass it to cross_val_score.
+We can do the same with StratifiedKFold, and we can also shuffle if we
+like, or we can use Shuffle split.
+
+---
+class: center, middle
+![:scale 80%](images/gridsearch_workflow.png)
+
+???
+Let’s come back to the general workflow for adjusting hyper-parameters,
+though.
+So we start with hyper parameters we want to adjust and our dataset,
+we split it into training and test set, find the best parameters using
+cross-validation, retrain the model and then do a final evaluation on
+the test set.
+Because this is such a common pattern, there is a helper class for this
+in scikit-learn, called GridSearch CV, which does most of these steps
+for you.
+---
+# GridSearchCV
+.smaller[
+```python
+from sklearn.model_selection import GridSearchCV
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y)
+
+
+param_grid = {'n_neighbors':  np.arange(1, 15, 2)}
+
+grid = GridSearchCV(KNeighborsClassifier(), param_grid=param_grid, cv=10)
+grid.fit(X_train, y_train)
+
+print("best mean cross-validation score: {:.3f}".format(grid.best_score_))
+print("best parameters: {}".format(grid.best_params_))
+
+print("test-set score: {:.3f}".format(grid.score(X_test, y_test)))
+```
+
+```
+best mean cross-validation score: 0.967
+best parameters: {'n_neighbors': 9}
+test-set score: 0.993
+```
+]
+???
+Here is an example.
+We still need to split our data into training and test set.
+We declare the parameters we want to search over as a dictionary. In
+this example the parameter is just n_neighbors and the values we want
+to try out are a range. The keys of the dictionary are the parameter
+names and the values are the parameter settings we want to try. If you
+specify multiple parameters, all possible combinations are tried. This
+is where the name grid-search comes from - it’s an exhaustive search
+over all possible parameter combinations that you specify.
+
+GridSearchCV is a class, and it behaves just like any other model in
+scikit-learn, with a fit, predict and score method.
+It’s what we call a meta-estimator, since you give it one estimator,
+here the KneighborsClassifier, and from that GridSearchCV constructs a
+new estimator that does the parameter search for you.
+You also specify the parameters you want to search, and the
+cross-validation strategy.
+Then GridSearchCV does all the other things we talked about, it does the
+cross-validation and parameter selection, and retrains a model with the
+best parameter settings that were found.
+We can check out the best cross-validation score and the best parameter
+setting with the best_score_ and best_params_ attributes.
+And finally we can compute the accuracy on the test set, simply but
+using the score method! That will use the retrained model under the hood.
+
+---
+
+# GridSearchCV Results
+.smallest[
+```python
+import pandas as pd
+results = pd.DataFrame(grid.cv_results_)
+results.columns
+```
+```
+Index(['mean_fit_time', 'mean_score_time', 'mean_test_score',
+       'mean_train_score', 'param_n_neighbors', 'params', 'rank_test_score',
+       'split0_test_score', 'split0_train_score', 'split1_test_score',
+       'split1_train_score', 'split2_test_score', 'split2_train_score',
+       'split3_test_score', 'split3_train_score', 'split4_test_score',
+       'split4_train_score', 'split5_test_score', 'split5_train_score',
+       'split6_test_score', 'split6_train_score', 'split7_test_score',
+       'split7_train_score', 'split8_test_score', 'split8_train_score',
+       'split9_test_score', 'split9_train_score', 'std_fit_time',
+       'std_score_time', 'std_test_score', 'std_train_score'],
+      dtype='object')
+```
+
+```python
+results.params
+```
+```
+0     {'n_neighbors': 1}
+1     {'n_neighbors': 3}
+2     {'n_neighbors': 5}
+3     {'n_neighbors': 7}
+4     {'n_neighbors': 9}
+5    {'n_neighbors': 11}
+6    {'n_neighbors': 13}
+Name: params, dtype: object
+```
+]
+
+???
+GridSearchCV also computes a lot of interesting statistics for you, which
+are stored in the cv_results_ attribute. That attribute is a dictionary,
+but it’s easiest to convert it to a pandas dataframe to look at it.
+Here you can see the columns. Theres mean fit time, mean score time,
+mean test scores, mean training scores, standard deviations and scores
+for each individual split of the data.
+And there is one row for each setting of the parameters we tried out.
+---
+class: center
+# n_neighbors Search Results
+
+![:scale 70%](images/grid_search_n_neighbors.png)
+???
+We can use this for example to plot the results of cross-validation over
+the different parameters.
+Here are the mean training score and mean test score together with one
+standard deviation.
+---
+
+class: middle
+
+# Questions ?
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script>
+    // Config Remark
+    remark.macros['scale'] = function (percentage) {
+        var url = this;
+        return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+    config_remark = {
+        highlightStyle: 'github',
+        highlightSpans: true,
+        highlightLines: true,
+        ratio: "16:9"
+    };
+      var slideshow = remark.create(config_remark);
+
+    // Configure MathJax
+    MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] /* removed 'code' entry*/
+    }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    </script>
+  </body>
+</html>
