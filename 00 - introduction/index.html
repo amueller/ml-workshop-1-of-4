@@ -3,52 +3,11 @@
   <head>
     <title>Introduction</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="../style.css">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Garamond);
       @import url(https://fonts.googleapis.com/css?family=Muli:400,700,400italic);
       @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
-
-      body {
-        font-family: 'Muli';
-        font-size: 140%;
-      }
-      h1, h2 {
-        font-family: 'Garamond';
-        font-weight: normal;
-      }
-      .remark-slide-content h1 {
-        font-size: 70px;
-        text-align: center;
-      }
-
-      .remark-slide-content p, .remark-slide-content li {
-        font-size:40px;
-        line-height: 1.6;
-      }
-      .remark-slide-content .compact {
-          font-size: 30px;
-          line-height: 1.1;
-          display: block;
-      }
-
-      .larger {
-          font-size: 40px;
-      }
-      .largest {
-          font-size: 50px;
-      }
-      .left-column, .right-column {
-          width: 48%;
-          float: left;
-      }
-      .right-column {
-          float: right;
-      }
-      .left-column {
-          float: left;
-      }
-
-      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
     </style>
   </head>
   <body>
@@ -56,101 +15,18 @@
 
 class: center, middle
 
-### W4995 Applied Machine Learning
+![:scale 40%](images/sklearn_logo.png)
+
+
+### Introduction to Machine learning with scikit-learn
 
 # Introduction
 
-01/17/18
-
 Andreas C. Müller
 
-???
+Columbia University, scikit-learn
 
-Hey and welcome to my course on Applied Machine Learning. As you can see we
-have a pretty full class so make sure you don’t hog too much space.  I’m
-Andreas Mueller, I’m a lecturer at the DSI and I spend some of my time working
-on scikit-learn development. Also, I decided to go on a first name basis with
-people in the course, so you can call me Andy. If you have any feedback about
-the class, feel free to send me an email or drop by my office hours. Also feel
-free to interrupt me with questions. I’m not sure if that’ll work with so big a
-class but I’m giving it a go. The goal of this class is to provide you with
-the hands-on knowledge you need to be successful in applying machine learning
-in the real world. It complements the Machine Learning course, but doesn’t rely
-on it.  For those of you who have taken a machine learning class, or who are
-taking it now, some things might be a bit redundant, but I promise you there’ll
-be a lot of new stuff in this course. Who’s taking machine learning this
-semester, raise your hand? And who has taken it before? And who hasn’t?
-
----
-
-class: center, middle
-
-# Scikit-learn Development
-
-![sklearn logo](images/sklearn_logo.png)
-
-http://scikit-learn.org/dev/developers/contributing.html
-
-???
-
-A couple of you have approached me asking if I have any projects relating to
-scikit-learn. Who here is interested in contributing to scikit-learn?  So
-answer is yes, there are many many projects. However, currently I don’t have a
-lot of time to mentor you on this. This will probably change during the
-semester. You are very welcome to start contributing to scikit-learn, though,
-and I’m happy to answer questions. There is a pretty extensive guide to
-contributing, the link is here. If you want to do a project with me,
-the best way is to start solving some of the easy issues on the issue
-tracker to get familiar with the project and the workflow before working
-on something bigger.
-
----
-
-# Logistics
-
-## Email
-andreas.mueller@columbia.edu
-(NOT amueller who is someone else)
-
-### CAs: Rajath Kumar, Isht Dwivedi, Kevin Raji Cherian, Vinale Kale, Ben Lai
-
-## Office Hours
-- Andreas Müller Thursdays 11am-12pm, 410 Mudd
-- Kevin Raji Cherian Fridays 5pm-7pm
-- Rajath Kumar Wednesdays 7pm-9pm
-- TBD
-
-???
-
-Before we get started, here’s some logistics. There’s four course assistance to
-this classi so far, Rajath, Isht, Kevin and Vinale, who are here to help you.
-We'll probably have one or two more join by the end of the week.
-They all have office hours in the CS TA Room. I'll post all the dates
-on the course website and piazza. My office hours are Thursdays, and I’m in the
-Data Science space in the Mudd building.
-
-Oh and about enrollment: If you’re not a DSI student, and you haven’t heard
-from us about enrollment, you’ll hear from us this week.
-
----
-
-# Logistics
-
-.larger[
-- Course website
-http://www.cs.columbia.edu/~amueller/comsw4995s18/<br /><br />
-- Six programming assignments<br /><br />
-- Grade: 60% homeworks, 20% first examp, 20% second exam<br /><br />
-]
-
-???
-
-If you haven’t already, please check out the course website which has the
-syllabus and other information. I’ll link to the slides there, too.  The most
-up-to-date material will always be on this website and the github repository,
-which is linked from there. There will be 6 homeworks, all will be
-programming, submitted via github. The homeworks will make up 60% of the grade,
-and there’ll be two exams, each making up 20% of the grade. 
+.smaller[https://github.com/amueller/ml-workshop-1-of-4]
 
 ---
 
@@ -176,35 +52,7 @@ classic for a more theoretical view. You can get it for free on the authors
 website.
 
 If you want to brush up on your Python skills, I also recommend the Python Data
-Science Handbook by my friend Jake Vanderplas. It's linked on the course page
-under the prerequisits.
-
----
-
-# Slides and course materials
-
-.center[
-![:scale 40%](images/slides_and_notes.png)
-]
-
-Using markdown with remark. Press "p" for notes.
-
-???
-
-As I said, you can find the slides on the website or on github. I’ll probably
-publish slides with and without notes. My goal is to write a note for each
-slide that says what I’m gonna say. So it’s like a script for the lecture.
-Here’s what this looks like. I really wanted to have video recording, but I'm
-not sure yet whether this will work out.  I might also publish some Jupyter notebooks
-at some point, if I feel they might help. In general, I’ll mostly do standard
-slides, though.
-The slides are all written in markdown and on github. If you find any errors
-or have suggestions, don't hesitate to send me pull requests.
-In the past I have used libre office impress, but that produces binary
-files that you can't easily version control. Hopefully using Markdown
-will make it easier to provide corrections for the slides.
-If you open the slides in the browser, you can press "P" for presenter mode
-and you'll see my notes.
+Science Handbook by my friend Jake Vanderplas.
 
 ---
 
@@ -214,8 +62,7 @@ class: center, middle
 
 ???
 
-I think I spend enough time on logistics, let’s finally get going. I first
-want to talk about what is machine learning, and why do we want it. As you’re
+I first want to talk about what is machine learning, and why do we want it. As you’re
 in this course, you’re probably already somewhat convinced that it’s useful,
 but I briefly want to give my own perspective. In general, today will not be
 very meaty and be more a loose collections of ideas and directions. The next
@@ -525,18 +372,6 @@ So now you can buy these shirts on redbubble
 
 ---
 
-class: center, middle
-
-![:scale 50%](images/future_will_not_be_supervised.png)
-
-???
-
-This might be true, but as long as we are trying to solve science and business
-problems, I think supervised learning is our best bet for now. It's probably
-not going to lead us to creating some superhuman general intelligence.
-
----
-
 # Classification and Regression
 
 .left-column[
@@ -610,7 +445,7 @@ Statistics
 .right-column[
 Machine learning
 - data first
-- prediction emphasiz
+- prediction emphasis
 ]
 
 ???
@@ -645,7 +480,7 @@ Statistics
 .right-column[
 Machine learning
 - data first
-- prediction emphasiz
+- prediction emphasis
 ]
 
 ???
@@ -718,93 +553,6 @@ understand.
 
 ---
 
-class: middle
-
-# Thinking in Context!
-# What is the baseline?
-# What is the benefit?
-
-???
-
-So think in context of your problem. What do you want to achieve? What is the
-easiest way to achieve this? And what will improving over this baseline buy
-you?
-
-Let’s go through an example:
-Imagine you had an electronics store, but you realized retail is all digital
-and you’re closing your store with one big sale to move on. You want to do an
-email campaign to tell all your customers about the sale. Is there a machine
-learning application here? You could try A/B testing the email message. But
-that will only work if you have many many customers. You could use ML to
-predict which customers might respond. How do you get the data? Let’s say you
-have data. What’s the benefit? None! This is your closing sale. You’ll never
-email them again. It doesn’t matter if they’ll include you in your spam filter.
-Just email everybody!
-
----
-
-class: middle
-
-# Good and Bad Substitutes
-
-???
-
-The problem of metrics is not unique to machine learning, but a problem in any
-data driven decision making. And often you have no choice but to use a
-substitute metric, either because the effect you’re interested in is too hard
-to measure, or because the influence is too indirect.  Imagine spotify improved
-their artist radio to be waaay better. The metric they care about is revenue.
-Do you think better radio will increase revenue short-term?
-What would be a good substitute metric?
-
-Let's say facebook wants to optimize their ad revenue. What should they measure?
-If people click on ads, that's probably good, right? But you can optimize
-clicks on ads by increasing accidental clicks by putting ads next to things
-people click. But accidental clicks will not yield conversions, and if you sell
-clicks to the ad buyers, and they don't result in conversions, they will
-go somewhere else.
-
----
-
-class: middle
-
-# Communicating Results
-
-???
-
-Another very important aspect of machine learning is to be able to communicate
-results, and to be able to explain methodologies. If you’re want to use machine learning
-in research that's not computer science, you need to be able to
-explain why it works. If you automatically make some decisions in your business
-applications, you need to convince your boss that nothing crazy will happen.
-How do you do that? It’s an important skill to explain what particular results
-mean, what their impact will be, and how often a method will work or fail.
-Only if you can convince your manager your approach is sensible will your
-system go to production.
-
----
-
-class: middle, center
-
-# Explainable Results
-
-![:scale 60%](images/amazon_explanations.png)
-
-???
-
-Sometimes, you even need to explain to the user why you made a decision. People
-found that recommendation engines work much better if the users are shown a
-reason for a particular recommendation. Netflix tells you based on what show it
-recommends another show, Amazon does the same for products. Interestingly,
-this also works even if the explanation is not true. There are systems that
-make a recommendation, and then provide a believable “explanation” after the
-fact. That gets more engagement than just providing the recommendation, though
-some people might question the ethics of that. Earlier I said in ML we are
-just interested in good predictions. If you need to be able to explain your
-predictions, this is no longer true.
-
----
-
 class: middle, center
 
 # Sidebar: Ethical Considerations
@@ -828,398 +576,6 @@ and I really recommend looking into it.
 
 ---
 
-class: middle
-
-# Ethics: It’s in the application!
-
-???
-
-Some people think that ethics is not something that the technical people should
-care about, but I disagree. I think if you build a machine learning system, you
-should know whether and how it is biased, and whether its application is
-ethical. Sometimes it’s hard to decide that, though. There’s an example of two
-high-schools, both of whom tried to predict which of their students will
-underperform in the coming year. There is a lot of ways this could be biased
-based on race, financial background and other factors. But that’s not the
-point. The point is that one of the schools used the predictions, and kicked
-out these students before the annual evaluation, so that they got a better
-evaluation score. The other school used the data to provide these students
-with targeted support and help. The algorithm could be the same, but the
-outcome is quite different. Ok, that’s enough about ethics, I hope you’ll keep
-these considerations in mind.
-The next thing I want to talk about is data!
-
----
-
-class: middle
-
-# Data and Data Collection
-
-???
-
-Clearly the data you use for building and applying machine learning systems is
-a critical component, and we will talk a lot about handling and transforming
-data this semester. Clearly, if you don’t have data, you can’t use machine
-learning. Let’s say you have a dataset. A very important question you need to
-ask yourself is: should I get more data? That’s another reason why kaggle
-competitions are bad: usually you can’t get more data. So what do you think?
-Should you get more data?
-More data always improves the model if it’s from the right source.
-So it depends:
-What’s the marginal cost of more data, what’s the marginal benefit to the
-model, what’s the marginal benefit of the model to your end-goal?  We will talk
-about how to assess the benefit to the model later in the course. But the other
-questions are also important.
-
----
-
-# Free vs Expensive Data 
-
-.left-column[
-## Free
-]
-
-.right-column[
-## Expensive
-]
-
-???
-
-The cost of data can be very different, and two kinds of data are particularly
-common: free data, and very expensive data. What kind of data do you think is
-free? 
----
-
-# Free vs Expensive Data 
-
-.left-column[
-## Free
-Predict observable events
-- Stock market
-- Clicks
-- House numbers
-]
-
-.right-column[
-## Expensive
-Automate complex process
-- Dignosis
-- Drug Trial
-- Chip Design
-]
-
-???
-
-Free data is data that you’ll just get more of. And that happens a lot.
-If you are running an ad company and want to do click prediction, every day
-you’ll get so much new data, you’ll barely be able to use it all.  The same is
-true for the stock-market. In general, if you want to predict the future, and
-the event is observable, you’ll get more data just by waiting.  This can either
-be because the world just produces the  data, or your business process produces
-them.  You can also be smart, and ensure your business is set up in a way so
-that it does produce the data.
-Google used captchas to do OCR and to read house numbers, then they used the
-results for machine learning.
-
-The other extreme of the spectrum is when you want to automate an expensive
-process with machine learning. This process could be an expert opinion, like a
-doctor’s diagnosis, or a literary analysis. It could also be an experiment,
-like an initial drug-trial, or measuring the efficiency of a microchip.
-
----
-
-class: middle
-
-# The cost (and benefit?) of BigData
-
-# Subsample to RAM (which can be 512gb)
-
-???
-
-There’s another aspect to data collection and dataset size. More data might be
-more expensive to collect, but it might also be more expensive and more
-complicated to work with. With the available cloud services, storage might not
-be that much of an issue any more. But runtime is. And I’m less concerned about
-buying a bigger cluster, I’m more concerned about your time, the data
-scientists time and the machine learning analysis.
-There’s a reason we’ll be using Python in this course. Python is easy to learn,
-has lots of tools and allows very close interactions with the data. If we would
-try to use SPARK instead, this would be whole other story. Working with
-distributed systems is hard, they are not responsive and the tooling is often
-not as good. So what I often do, no matter how big the dataset is, is to work
-with a subset of the data that fits into my RAM. Then I can use python, and
-everything is easy. And with AWS, I can easily get 512GB of RAM, if I really
-need to.
-Arguably I'm a bit biased because I work on scikit-learn. For some applications
-that subsampling might not make sense, or working on very large data is critical.
-But I don't think that should ever be the first step.
-
----
-
-# Cornerstones of this Course
-
-- Good software engineering practices
-- Problem definition and success measures
-- Feature engineering and data cleaning
-- Strength and weaknesses of different algorithms
-- Model selection best practices
-
-???
-
-So finally some notes about my philosophy for this course. There are a couple
-of things I want to emphasize. One is good software engineering practices.
-Machine learning systems are usually more complex than traditional software,
-and so good software engineering is even more important, and that’s where we’ll
-start in the next lecture.
-One thing that we discussed today and that will also be part of the assignments
-is problem formulation and choosing the right evaluation measure. That’s
-something that’s critical in the real world, but not part of your usual course
-or ml competition.
-There are things that are often not taught in class, but you can learn at
-machine learning competitions are feature engineering, data cleaning and model
-choice.
-And it’s not only important to know which models to try, it’s also important to
-apply best practices in model selection to ensure your models will perform well
-in the real world.
-
----
-
-# The Machine Learning Work-Flow
-
-![:scale 100%](images/ml-workflow.png)
-
-Taken from MAPR https://www.mapr.com/ebooks/spark/08-recommendation-engine-spark.html
-
-???
-
-Here is one possible depiction of the overall machine learning workflow.
-In this class, I attempt to cover as many aspects of this as possible,
-only leaving out the data collection.
-I stole this illustration from a book on recommendation engines, but I mostly
-agree with it.
-Everything starts with the data generating process, in this diagram it’s the
-user. You ingest the data, and preprocess it. Some of the preprocessed that is
-held out for model validation. The rest is used for actually building the
-model. Then, there’s the model debugging loop. You get results and you want to
-improve them. That’s what’s shown as the train-test-loop. I would argue
-sometimes this loop goes further back, and maybe you discover an issue as early
-as in the ingestion. In the end, you find a model that you like, and you deploy
-it. However, that’s not the end of the story! If you’re working with a life
-system, the deployed model is likely to change user behavior, which means your
-input data changes, and your model might not be applicable any more! That
-feedback loop is really tricky, and we won’t go into that in this course. It’s
-good to keep in mind when you all create your first startup, though.
-
----
-
-# Overview of the course
-
-???
-
-I want to end the lecture with discussing the structure of the rest of the course,
-so you have some idea on where we are going.
-
----
-
-# Infrastructure and basic tools (Wk 2, 3)
-
-- Python, Jupyter
-- git, github
-- testing, documentation, continuous integration
-- Writing fast Python
-- Numpy, matplotlib, pandas
-
-???
-
-Starting next week, we'll talk about the basic infrastruture.
-This will be not very specific to machine learning, but it's an important
-foundation for any applied data science. We'll talk about Python and Jupyter,
-about version control with git and github, and about testing and continuous integration.
-
-Who of you has used continuous integration? Many students that I talk to don't
-even know what that means. That's shocking to me, because it's part of any
-software related job you'll get. It's about automatically running tests
-via a service and it's a core piece of infrastructure for any software project.
-
-We'll also talk about how to write efficient python code, and how to work with numpy,
-matplotlib and pandas. I'll spend some time on matplotlib, since some parts
-are not super intuitive, and a lot of it is often sweeped under the rug.
-Visualizing your data and models is really critical to any data analysis, though.
-
----
-
-# Basics of Supervised Learning (Wk 3, 4)
-
-- Generalization in practice
-- Nearest Neighbors, Nearest Centroid
-- Linear Classification and Regression
-- Penalties and Regularization
-
-???
-
-Once we finished with infrastructure and tools, we'll start working with scikit-learn
-and explore some of the basic machine learning algorithms like neighbors based
-algorithms and linear models, and how to do proper model evaluation and set up
-a basic machine learning workflow.
-
----
-
-# Data Preparation (Wk 4, 5)
-
-- Preprocessing
-- Feature engineering
-- Dealing with missing values
-- Feature Selection
-
-???
-
-Once we covered the basic algorithms, we'll dive more into data preparation,
-in particular preprocessing, feature engineering and missing values.
-For any real-world dataset you usually have to do quite a bit of work before you
-can feed it into a machine learning model. There will be a homework project
-centered around all of these.
-
----
-
-# Non-linear machine learning models (Wk 5, 6)
-
-- Support Vector Machines and Kernels
-- Decision Trees
-- Random Forests
-- Gradient Boosting
-- Model Calibration
-
-???
-
-After we taked about how to prepare data, we'll look into more powerful supervised models.
-We'll look into support vector machines and kernel-based methods, and then dive a bit deeper into
-tree-based models. Tree-based models, in particular gradient boosted trees, have been very
-successful and are some of the best off-the-shelf methods for machine learning.
-
----
-
-# Model evaluation and imbalanced data (Wk 7)
-
-- Metrics for binary and multi-class classification
-- Metrics for regression
-- Analyzing predictions
-- Handling imbalanced datasets for classification
-
-???
-
-Knowing all these machine learning models, we come back to the workflow, in particular
-the evaluation. Model evaluation is a tricky beast in practice, and it's often hard
-to decide which model is best, and how to tell.
-We'll also look into methods that are designed for classification with very imbalanced
-classes, something you'll see very frequently in practice.
-
-That concludes the main section on supervised learning.
-
----
-
-# Decomposition Methods (Wk 10)
-
-- PCA
-- Discriminant Analysis
-- Manifold Learning
-- Non-negative Matrix Factorization
-
-???
-
-We'll then look into some unsupervised models, starting with decomposition methods.
-These are often useful for exploratory analysis and plotting, but can also be used
-in other situations. We'll stick to the most commonly used methods like
-Principal components, Non-negative matrix factorization and t-SNE.
-
----
-
-# Clustering (Wk 10, 11)
-
-- K-Means
-- DBScan
-- Agglomerative Clustering
-- Spectral Clustering
-- Supervised evaluation metrics
-- Unsupervised evaluation metrics
-
-???
-
-A second area of unsupervised learning that is often used in practice, mostly
-in exploratory settings, is clustering. We'll discuss some of the standard
-clustering approaches and how to evaluate them.
-As this is unsupervised learning, there's usually no correct answer, and
-picking and tuning algorithms is even harder than for supervised learning.
-
----
-
-# Outlier Detection (Wk 11)
-
-- One Class SVM
-- Robust Covariance Estimates
-- Isolation Forests
-
-???
-
-The last class of unsupervised models that we'll look into is outlier detection.
-In Outlier Detection we are trying to find data points that look odd.
-That's helpful if you want to detect rare events, but you don't know what these
-might look like. Applications are fraud detection, network security, hardware failures
-and so on.
-
-That concludes the section on unsupervised methods.
-
----
-
-# Text Data (Wk 12, 13)
-
-- n-grams and Bag-of-words models
-- Preprocessing text
-- Text classification
-- Topic models
-- word embeddings and word vectors
-
-
-???
-
-The final direction of the course will be about how to work with certain types of data
-that need special treatment. We'll start with text data, and discuss the classical bag-of-word
-approach, as well as the more recent word vectors and embedding approaches.
-
----
-
-# Neural Networks (Wk 13, 14)
-
-- Backpropagation
-- Tensorflow
-- Keras
-- Learning Algorithms
-- Image data and convolutional neural networks
-- Best practices for neural networks
-
-???
-
-Then, we'll look at neural networks, and how convolutional neural networks can
-be applied to image data.  Before we go to image data we'll actually go through
-neural networks in some depth, covering libraries and algorithms.
-
----
-
-# Time Series Data (Wk 15)
-
-- The forecasting task
-- Evaluation of forecasting
-- ARMA
-- ARIMA
-
-???
-
-The very last part will be about time series data, and how to work on forecasting problems.
-We'll only briefly cover this topic, and mostly look at classical approaches like Autoregressive models.
-
----
-class: middle
-
-# Questions ?
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
