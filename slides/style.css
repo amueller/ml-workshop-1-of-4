@@ -39,17 +39,17 @@
           overflow: auto;
           width: 100%;
       }
-      .remark-slide-content .compact p, .remark-slide-content .compact li, .remark-slide-content .compact pre, .remark-slide-content .compact .MathJax_Display{
-          font-size: 30px;
-          line-height: 1.1;
-          display: block;
-          margin: 2px 0;
-      }
+      .remark-slide-container .compact p, .remark-slide-container .compact li, .remark-slide-container .compact pre{
+        font-size: 30px;
+        line-height: 1.1;
+        display: block;
+        margin: 10px 0;
+    }
       .padding-top {
           padding-top: 100px;
       }
       .remark-slide-content .smaller p, .remark-slide-content .smaller li,
-      .remark-slide-content .smaller .remark-code, .remark-slide-content .smaller a{
+      .remark-slide-content .smaller .remark-code,  .smaller .remark-code-line,.remark-slide-content .smaller a{
           font-size: 25px;
       }
       .normal {
