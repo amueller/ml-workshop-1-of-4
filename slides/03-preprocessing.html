@@ -626,7 +626,7 @@ N/A
 
 ---
 
-# CategoricalEncoder
+# OneHotEncoder
 
 ```python
 import pandas as pd
@@ -634,7 +634,7 @@ df = pd.DataFrame({'salary': [103, 89, 142, 54, 63, 219],
                    'boro': ['Manhattan', 'Queens', 'Manhattan',
                             'Brooklyn', 'Brooklyn', 'Bronx']})
 
-ce = CategoricalEncoder().fit(df)
+ce = OneHotEncoder().fit(df)
 ce.transform(df).toarray()
 ```
 ```
@@ -653,16 +653,14 @@ array([[ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
 
 ---
 # The Future
-## CategoricalEncoder + ColumnTransformer
+## OneHotEncoder + ColumnTransformer
 
 ```python
 categorical = df.dtypes == object
 
 preprocess = make_column_transformer(
     (StandardScaler(), ~categorical),
-    (CategoricalEncoder(), categorical))
-
-model = make_pipeline(preprocess, LogisticRegression())
+    (OneHotEncoder(), categorical))
 ```
 
 ---
@@ -698,6 +696,9 @@ class: some-space
 N/A
 
 ---
+class: center, middle
+
+# Notebook: Preprocessing
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
