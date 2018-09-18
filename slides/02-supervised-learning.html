@@ -33,29 +33,39 @@ Columbia University, scikit-learn
 
 class: center
 
-# Supervised Learning
+# scikit-learn documentation
+![:scale 60%](images/sklearn-docs.png)
 
-.larger[
-$$ (x_i, y_i) \propto p(x, y) \text{ i.i.d.}$$
-$$ x_i \in \mathbb{R}^p$$
-$$ y_i \in \mathbb{R}$$
-$$f(x_i) \approx y_i$$
-$$f(x) \approx y$$
-]
-???
-As a reminder, in supervised learning, the dataset we learn form is
-input-output pairs $(x_i, y_i)$, where $x_i$ is some n-dimensional input,
-or feature vector, and $y_i$ is the desired output we want to learn to predict.
-We assume these samples are drawn from some unknown joint distribution
-$p(x, y)$.
-You can think of this as there being some (not necessarily deterministic)
-process that goes from $x_i$ to $y_i$, but that we don’t know.
-We try to find a function that approximates the output $y_i$ for each known
-input $x_i$. But we also demand that for new inputs $x$ , and unobserved $y$,
-$f(x)$ is approximately $y$.
+---
+class: center
 
-I want to go through two simple examples of supervised algorithms today,
-nearest neighbors and nearest centroids.
+# Representing Data
+
+![:scale 100%](images/matrix-representation.png)
+---
+class: center
+
+# Training and Test Data
+
+![:scale 100%](images/train-test-split.png)
+---
+class: center, middle
+
+# Data Loading Notebook
+
+---
+class: center
+
+# Supervised Machine Learning Workflow
+
+![:scale 100%](images/supervised-ml-workflow.png)
+---
+class: center
+
+# Supervised Machine Learning Workflow
+
+![:scale 100%](images/supervised-ml-api.png)
+
 ---
 class: center
 
