@@ -26,7 +26,7 @@ import os
 import pandas as pd
 iris_path = os.path.join(sklearn.datasets.__path__[0], 'data', 'iris.csv')
 iris_df =  pd.read_csv(iris_path, header=None)
-display(iris.head())
+display(iris_df.head())
 
 iris_df = pd.read_csv(iris_path, skiprows=1, header=None)
-display(iris.head())
+display(iris_df.head())
