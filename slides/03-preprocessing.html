@@ -617,7 +617,8 @@ array([[   1.,    0.,    0.,    0.,  103.],
        [   0.,    0.,    0.,    1.,  219.]])
 ```
 
-- Only works for integers right now, not strings.
+- Legacy mode: Only works for integers right now, not strings.
+- New mode: works on strings and integers, but always transforms all columns.
 
 ???
 N/A
@@ -652,15 +653,15 @@ array([[ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
 - Fit-transform paradigm ensures train and test-set categories correspond.
 
 ---
-# The Future
+# New in 0.20.0
 ## OneHotEncoder + ColumnTransformer
 
 ```python
 categorical = df.dtypes == object
 
 preprocess = make_column_transformer(
-    (StandardScaler(), ~categorical),
-    (OneHotEncoder(), categorical))
+    (~categorical, StandardScaler()),
+    (categorical, OneHotEncoder())
 ```
 
 ---
@@ -689,7 +690,7 @@ class: some-space
 - In scikit-learn:
   - None
 - In scikit-learn soon:
-  - Decision trees, random forests
+  - Decision trees, random forests, gradient boosting
 
 
 ???
