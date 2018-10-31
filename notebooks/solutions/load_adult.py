@@ -7,6 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 # in Jupyter
 from IPython.display import display
 
+# Exercise 1
 data = pd.read_csv("data/adult.csv", index_col=0)
 display(data.head())
 
@@ -15,8 +16,27 @@ data_features = data.drop("income", axis=1)
 
 display(data_features.head())
 
-data_one_hot = pd.get_dummies(data_features)
+# Exercise 2
 
+data.age.hist()
+
+# plot by gender
+plt.figure()
+plt.title("By gender")
+grouped = data.groupby("gender")
+grouped.income_bin.mean().plot.barh()
+
+# plot by education
+plt.figure()
+plt.title("By education")
+data.groupby("education").income_bin.mean().sort_values().plot.barh()
+
+plt.figure()
+plt.title("By race")
+data.groupby("race").income_bin.mean().sort_values().plot.barh()
+
+# Exercise 3
+data_one_hot = pd.get_dummies(data_features)
 X_train, X_test, y_train, y_test = train_test_split(data_one_hot, income)
 
 scaler = MinMaxScaler().fit(X_train)
@@ -30,3 +50,14 @@ continuous = data.columns[data.dtypes == "int64"]
 colors = (y_train.values == " <=50K").astype(np.int)
 pd.plotting.scatter_matrix(X_train[continuous], c=plt.cm.tab10(colors),
                                  alpha=.2, figsize=(10, 10));
+
+# Exercise 4
+from sklearn.linear_model import LogisticRegression
+logreg = LogisticRegression(C=0.1)
+logreg.fit(X_train_scaled, y_train)
+print("Training score:", logreg.score(X_train_scaled, y_train)
+
+X_test_scaled = scaler.transform(X_test)
+print("Test score:", logreg.score(X_test_scaled, y_test)
+      
+print("Faction <= 50k", (y_train.values == " <=50K").mean())
