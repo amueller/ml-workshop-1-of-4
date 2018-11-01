@@ -90,6 +90,32 @@ penalty. L2 is the same for all!
 
 We can also see non-gaussian distributions here btw!
 ---
+# Scaling and Distances
+
+![:scale 90%](images/knn_scaling.png)
+
+???
+Here is an example of the importance of scaling using a distance-based algorithm, K nearest neighbors.
+My favorite toy dataset with two classes in two dimensions. The scatter plots look identical,
+but on the left hand side, the two axes have very different scales. The x axis has much
+larger values than the y axis.
+On the right hand side, I used standard scaler and so both features have zero mean and unit
+variance.
+So what do you think will happen if I use k nearest neighbors here?
+Let's see
+---
+# Scaling and Distances
+
+![:scale 90%](images/knn_scaling2.png)
+
+???
+As you can see, the difference is quite dramatic. Because the X axis has such a larger magnitude
+on the left-hand side, only distances along the x axis matter. However, the important
+feature for this task is the y axis. So the important feature gets entirely ignored because
+of the different scales.
+And usually the scales don't have any meaning - it could be a matter of changing meters to kilometers.
+
+---
 class: center
 
 # Ways to Scale Data
@@ -231,31 +257,6 @@ transform the training data, you can use fit_transform. That’s often
 more efficient then using first fit and then transform. The same
 goes for fit_predict.
 
----
-# Scaling and Distances
-
-![:scale 90%](images/knn_scaling.png)
-
-???
-Here is an example of the importance of scaling using a distance-based algorithm, K nearest neighbors.
-My favorite toy dataset with two classes in two dimensions. The scatter plots look identical,
-but on the left hand side, the two axes have very different scales. The x axis has much
-larger values than the y axis.
-On the right hand side, I used standard scaler and so both features have zero mean and unit
-variance.
-So what do you think will happen if I use k nearest neighbors here?
-Let's see
----
-# Scaling and Distances
-
-![:scale 90%](images/knn_scaling2.png)
-
-???
-As you can see, the difference is quite dramatic. Because the X axis has such a larger magnitude
-on the left-hand side, only distances along the x axis matter. However, the important
-feature for this task is the y axis. So the important feature gets entirely ignored because
-of the different scales.
-And usually the scales don't have any meaning - it could be a matter of changing meters to kilometers.
 
 ---
 class: smaller, compact
