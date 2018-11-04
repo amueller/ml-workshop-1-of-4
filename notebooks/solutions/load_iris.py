@@ -30,3 +30,6 @@ display(iris_df.head())
 
 iris_df = pd.read_csv(iris_path, skiprows=1, header=None)
 display(iris_df.head())
+
+features = iris_df.iloc[:, :4]
+target = iris_df.iloc[:, 4]
