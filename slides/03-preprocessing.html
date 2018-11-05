@@ -379,13 +379,9 @@ There is slightly more rigorous technique though.
 
 ---
 
-# Box-Cox Transform
-
+# Power Transformations (Box-Cox & Yeo-Johnson)
 .left-column[
 $$bc_{\lambda}(x) = \cases{\frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0\cr log(x) & \text{if } \lambda = 0 }$$
-
-
-Only applicable for positive x!
 ]
 
 .right-column[
@@ -394,10 +390,9 @@ Only applicable for positive x!
 
 .reset-column[
 ```python
-# sklearn 0.20-dev
 from sklearn.preprocessing import PowerTransformer
+# Use "yeo-johnson" for positive+negative data
 pt = PowerTransformer(method='box-cox')
-# soon: Yeo-Johnson
 pt.fit(X)
 ```
 ]
@@ -690,7 +685,7 @@ class: some-space
   - All tree-based models, naive Bayes
 - In scikit-learn:
   - None
-- In scikit-learn soon:
+- In scikit-learn "soon":
   - Decision trees, random forests, gradient boosting
 
 

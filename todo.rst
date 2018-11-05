@@ -5,21 +5,23 @@ linear models for classification: adult solution gives weird coefficients!
 
 handle-unknown=ignore for cross-validating one-hot encoder!
 
-Update bio for odsc, 104-98, knn scaling slide to the front. Preprocessing
-remove cross validation. Adult classification solution 1.3 using
-columntransformer, missing values cross val. adult was too fast maybe? Bc
-cross-validation? B/c column transformer? 2.2 cross validation instead of cross
-val score? Cross validation slides too complicated. 86 after second coffee
-break? Linear regression: delete most of the notebook. Remove most of the
-linear regression slides. remove "format" everywhere?  Host the slides so I can
-link to them. 142 after coffee. Handle unknown in onehot in cv. Didn't get to
-imbalanced data. 86 in afternoon? Sgdclassifier exercise not interesting
-without explanation of sgd. CSV iterator typo. Bad error message on changing in
-init (clone breaks weird). Text data notebook and slides redundant. Many slides
-and notebooks redundant?!  Clean up writing own estimator
+Update bio for odsc,
+Preprocessing remove cross validation
+Adult classification solution 1.3 using columntransformer, missing values cross val.
+adult was too fast maybe? Bc cross-validation? B/c column transformer?
+2.2 cross validation instead of crossval score? Cross validation slides too complicated.
+Linear regression: delete most of the notebook. Remove most of the
+linear regression slides.
+Host the slides so I can link to them.
+Handle unknown in onehot in cv. Didn't get to imbalanced data.
+Sgdclassifier exercise not interesting without explanation of sgd.
+CSV iterator typo on slide.
+Bad error message on changing in init (clone breaks weird).
+Text data notebook and slides redundant.
+Many slides and notebooks redundant?!
+Clean up writing own estimator
 
 
-BUMP REQUIREMENT TO 0.20!!!
 make slides work offline?
 add power transformer, rankink transformer? better preprocessing?
 make sure the requirements include imblearn xgboost
@@ -42,7 +44,6 @@ linear models for classification notebook bleak
 
 For 3/4
 No solutions at all?
-imbalanced dataset notebook outdated, doesn't use cross_validation, doesn't use BaggingClassifier thing from imblearn
 evaluation metrics notebook comes from book, use updated book code? it's kinda weird, make sure to sync with slides
 03-model-evaluation.html#28 -> update report with averages!
 
