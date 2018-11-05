@@ -82,13 +82,13 @@ class: spacious
 ```python
 
 from sklearn.linear_model import LogisticRegressionCV
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X_, y, stratify=y)
 
 nan_columns = np.any(np.isnan(X_train), axis=0)
 X_drop_columns = X_train[:, ~nan_columns]
-scores = cross_val_score(LogisticRegressionCV(v=5), X_drop_columns, y_train, cv=10)
-np.mean(scores)
+lr = LogisticRegression().fit(X_drop_columns, y_train)
+lr.score(X_test[:, ~nan_columns], y_test)
 ```
 0.772
 ]
@@ -119,21 +119,19 @@ np.mean(scores)
 
 
 ```python
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScalar
-
 nan_columns = np.any(np.isnan(X_train), axis = 0)
 X_drop_columns = X_train[:,~nan_columns]
-logreg = make_pipeline(StandardScalar(), LogisticRegression())
-scores = cross_val_score(logreg, X_drop_columns, y_train, cv = 10)
-np.mean(scores)
+logreg = LogisticRegression()
+logreg.fit(X_drop_columns, y_train)
+logreg.score(X_test[:,~nan_columns], y_test)
 ```
 0.794
 ```python
-mean_pipe = make_pipeline(Imputer(), StandardScalar(),
-                          LogisticRegression())
-scores = cross_val_score(mean_pipe, X_train, y_train, cv =10)
-np.mean(scores)
+imp = SimpleImputer()
+X_train_imp = imp.fit_transform(X_train)
+lr = LogisticRegression().fit(X_train_imp, y_train)
+X_test_imp = imp.transform(X_test)
+lr.score(X_test_imp, y_test)
 ```
 0.729
 
@@ -185,8 +183,8 @@ for feature in range(X_train.shape[1]):
 ---
 .smaller[
 ```python
-scores = cross_val_score(logreg, X_train_knn, y_train, cv=10)
-np.mean(scores)
+logreg.fit(X_train_knn, y_train)
+logreg.score(X_test_knn, y_test)
 ```
 ```
 0.849

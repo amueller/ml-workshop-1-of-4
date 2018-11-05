@@ -262,46 +262,47 @@ goes for fit_predict.
 class: smaller, compact
 
 ```python
-from sklearn.model_selection import cross_val_score
-from sklearn.linear_model import RidgeCV
-scores = cross_val_score(RidgeCV(), X_train, y_train, cv=10)
-np.mean(scores), np.std(scores)
+from sklearn.linear_model import Ridge
+ridge = Ridge()
+ridge.fit(X_train, y_train)
+ridge.score(X_test, y_test)
 ```
 
 ```
-(0.717, 0.125)
-
-```
-
-```python
-scores = cross_val_score(RidgeCV(), X_train_scaled, y_train, cv=10)
-np.mean(scores), np.std(scores)
-```
-
-```
-(0.718, 0.127)
+0.717
 
 ```
 
 ```python
-from sklearn.neighbors import KNeighborsRegressor
-scores = cross_val_score(KNeighborsRegressor(), X_train, y_train, cv=10)
-np.mean(scores), np.std(scores)
+ridge.fit(X_train_scaled, y_train)
+ridge.score(X_test_scaled, y_test)
 ```
 
 ```
-(0.499, 0.146)
+0.718
 
 ```
 
 ```python
 from sklearn.neighbors import KNeighborsRegressor
-scores = cross_val_score(KNeighborsRegressor(), X_train_scaled, y_train, cv=10)
-np.mean(scores), np.std(scores)
+knn = KNeighborsRegressor()
+knn.fit(X_train, y_train)
+knn.score(X_test, y_test)
 ```
 
 ```
-(0.750, 0.106)
+0.499
+
+```
+
+```python
+knn = KNeighborsRegressor()
+knn.fit(X_train_scaled, y_train)
+knn.score(X_test_scaled, y_test)
+```
+
+```
+0.750
 
 ```
 
