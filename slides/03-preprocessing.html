@@ -71,7 +71,7 @@ N/A
 class: center, middle
 
 .center[
-![:scale 70%](images/preprocessing_img_2.png)
+![:scale 70%](images/boston_ranges.png)
 ]
 
 
@@ -122,7 +122,7 @@ class: center
 
 # Ways to Scale Data
 <br />
-![:scale 80%](images/preprocessing_img_3.png)
+![:scale 80%](images/scalers_comparison_scatter.png)
 ???
 Here's an illustration of four of the most common ways. One
 of the most common ones that we already saw before is the
@@ -157,7 +157,7 @@ basically it means you make sure the sum of all the entries
 is one. That's often used if you have histograms or if you
 have counts of things. If you want to make sure that you
 have frequency features instead of count features, you can
-use the L1 normalizer. 
+use the L1 normalizer.
 
 ---
 class: spacious
@@ -241,7 +241,7 @@ That’s quite important.
 class: center, middle
 
 .center[
-![:scale 100%](images/preprocessing_img_5.png)
+![:scale 100%](images/api_table.png)
 ]
 
 ???
@@ -380,7 +380,7 @@ distributions.
 class: left, middle
 
 .center[
-![:scale 85%](images/preprocessing_img_17.png)
+![:scale 85%](images/boston_scaled_box.png)
 ]
 
 ???
@@ -424,7 +424,7 @@ $$bc_{\lambda}(x) = \cases{\frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \n
 ]
 
 .right-column[
-![:scale 90%](images/preprocessing_img_19.png)
+![:scale 90%](images/boxcox_lambda.png)
 ]
 
 .reset-column[
@@ -563,7 +563,7 @@ which deal with categorical variables implicitly.
 class: center, middle
 
 # Categorical Variables
-.center[![:scale 60%](images/preprocessing_img_24.png)]
+.center[![:scale 60%](images/color_categories.png)]
 
 ???
 
@@ -593,7 +593,7 @@ create new columns, it will actually replace borough column
 by four columns that correspond to the four different
 values. The get_dummies applies transformation to all
 columns that have a dtype that's either object or
-categorical. 
+categorical.
 
 In this case we didn't actually want to transform the target variable vegan.
 
@@ -601,8 +601,8 @@ In this case we didn't actually want to transform the target variable vegan.
 
 class: center, middle
 
-.center[![:scale 60%](images/preprocessing_img_25.png)]
-.center[![:scale 60%](images/preprocessing_img_26.png)]
+.center[![:scale 60%](images/pandas_dummies1.png)]
+.center[![:scale 60%](images/pandas_dummies2.png)]
 
 ???
 N/A
@@ -611,9 +611,9 @@ N/A
 
 class: center, middle
 
-.center[![:scale 50%](images/preprocessing_img_27.png)]
-.left-column[![:scale 30%](images/preprocessing_img_28.png)]
-.right-column[![:scale 50%](images/preprocessing_img_29.png)]
+.center[![:scale 50%](images/pandas_dummies3.png)]
+.left-column[![:scale 30%](images/pandas_dummies4.png)]
+.right-column[![:scale 50%](images/pandas_dummies5.png)]
 
 ???
 Let's say instead of predicting whether someone is vegan,
@@ -626,7 +626,7 @@ should be treated as categorical and one as ordinal or continuous.
 
 class: center, middle
 
-.center[![:scale 70%](images/preprocessing_img_30.png)]
+.center[![:scale 70%](images/pandas_dummies_column_mismatch.png)]
 
 ???
 If someone else gives you a new data set and in this new
@@ -640,7 +640,7 @@ someone gives you separate training and test data sets, if
 you call get_dummies, you don't know that the columns
 correspond actually to the same thing. Unless you take care
 of the names, unfortunately, scikit-learn completely ignores
-column names. 
+column names.
 
 ---
 class: smaller
@@ -693,7 +693,7 @@ appeared in my dataset, it will still make a column for
 Staten Island. If I fix this categorical dtype I can apply
 it to the training and test data set and that'll make sure
 all the columns are always the same no matter what are the
-values are actually in the data set. 
+values are actually in the data set.
 
 ---
 
@@ -746,7 +746,7 @@ always does it on all columns and it computes the unique
 values. Here for salary there six unique value, so add six
 columns for salary and then there are four values for
 borough. So this is actually what you want but you only want
-to apply it to a subset of the columns. 
+to apply it to a subset of the columns.
 
 
 ---
@@ -853,7 +853,7 @@ they will. So what you can do is either you do the One Hot
 Encoder or you just encode this as integers and treat it as
 a continuous. If you have very high categorical variables
 with many levels, maybe it keeping it as an integer might
-make more sense. 
+make more sense.
 
 ---
 class: center, middle
