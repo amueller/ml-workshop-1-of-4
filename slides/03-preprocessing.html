@@ -737,7 +737,6 @@ values are actually in the data set.
 ---
 
 #OneHotEncoder
-- Deprecated mode, don't use.
 
 ```python
 from sklearn.preprocessing import OneHotEncoder
@@ -756,10 +755,10 @@ array([[   1.,    0.,    0.,    0.,  103.],
        [   0.,    0.,    1.,    0.,   63.],
        [   0.,    0.,    0.,    1.,  219.]])
 ```
-
+.smaller[
 - Legacy mode: Only works for integers right now, not strings.
 - New mode: works on strings and integers, but always transforms all columns.
-
+]
 ???
 You can also do this with scikit-learn. There are two ways
 to do this scikit-learn. Here's the old way.
@@ -859,7 +858,7 @@ FIXME add code
 ---
 class: some-space
 
-#OneHot vs Statisticians
+# Dummy variables and colinearity
 
 - One-hot is redundant (last one is 1 – sum of others)
 - Can introduce co-linearity
@@ -894,15 +893,14 @@ a continuous. If you have very high categorical variables
 with many levels, maybe it keeping it as an integer might
 make more sense.
 ---
-
+class: middle
 # Feature Distributions
 
 ???
 
 Now that we discussed scaling and pipelines, let’s talk
-about some more preprocessing methods. One
-important aspect is dealing with different input
-distributions.
+about some more preprocessing methods. One important aspect
+is dealing with different input distributions.
 
 ---
 
@@ -915,19 +913,18 @@ class: left, middle
 ???
 
 Here is a box plot of the boston housing data after
-transforming it with the standard scaler. Even though
-the mean and standard deviation are the same for all
-features, the distributions are quite different. You can
-see very concentrated distributions like Crim and B,
-and very skewed distribuations like RAD and Tax
-(and also crim and B).
+transforming it with the standard scaler. Even though the
+mean and standard deviation are the same for all features,
+the distributions are quite different. You can see very
+concentrated distributions like Crim and B, and very skewed
+distribuations like RAD and Tax (and also crim and B).
 
 Many models, in particular linear models and neural
-networks, work better if the features are
-approximately normal distributed.
+networks, work better if the features are approximately
+normal distributed.
 
-Let’s also check out the histograms of the data to see
-a bit better what’s going on.
+Let’s also check out the histograms of the data to see a bit
+better what’s going on.
 
 ---
 
@@ -939,17 +936,17 @@ class: left, middle
 
 ???
 
-Clearly CRIM and ZN and B are very peaked, and
-LSTAT and DIS and Age are very asymmetric.
-Sometimes you can use a hack like applying a
-logarithm to the data to get better behaved values.
-There is slightly more rigorous technique though.
+Clearly CRIM and ZN and B are very peaked, and LSTAT and DIS
+and Age are very asymmetric. Sometimes you can use a hack
+like applying a logarithm to the data to get better behaved
+values. There is slightly more rigorous technique though.
 
 ---
 
-# Power Transformations (Box-Cox & Yeo-Johnson)
+# Power Transformations
 .left-column[
 $$bc_{\lambda}(x) = \cases{\frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0\cr log(x) & \text{if } \lambda = 0 }$$
+Only applicable for positive x!
 ]
 
 .right-column[
@@ -959,8 +956,8 @@ $$bc_{\lambda}(x) = \cases{\frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \n
 .reset-column[
 ```python
 from sklearn.preprocessing import PowerTransformer
-# Use "yeo-johnson" for positive+negative data
 pt = PowerTransformer(method='box-cox')
+# for any data: Yeo-Johnson
 pt.fit(X)
 ```
 ]
@@ -969,17 +966,15 @@ pt.fit(X)
 
 The Box-Cox transformation is a family of univariate
 functions to transform your data, parametrized by a
-parameter lambda. For lamda=1 the function is the
-identity, for lambda = 2 it is square, lambda =0 is log
-and there is many other functions in between. For a
-given dataset, a separate parameter lambda is
-determined for each feature, by minimizing the
-skewdness of the data (making skewdness close to
-zero, not close to -inf), so it is more “gaussian”. The
-skewdness of a function is a measure of the
-asymmetry of a function and is 0 for functions that
-are symmetric around their mean.
-Unfortunately the Box-Cox transformation is only
+parameter lambda. For lamda=1 the function is the identity,
+for lambda = 2 it is square, lambda =0 is log and there is
+many other functions in between. For a given dataset, a
+separate parameter lambda is determined for each feature, by
+minimizing the skewdness of the data (making skewdness close
+to zero, not close to -inf), so it is more “gaussian”. The
+skewdness of a function is a measure of the asymmetry of a
+function and is 0 for functions that are symmetric around
+their mean. Unfortunately the Box-Cox transformation is only
 applicable to positive features.
 
 
@@ -1001,15 +996,15 @@ applicable to positive features.
 Here are the histograms of the original data and the
 transformed data. The title of each subplot shows the
 estimated lambda. If the lambda is close to 1, the
-transformation didn’t change much. If it is away from
-1, there was a significant transformation.
+transformation didn’t change much. If it is away from 1,
+there was a significant transformation.
 
 You can clearly see the effect on “CRIM” which was
-approximately log-transformed, and lstat and nox
-which were approximately transformed by sqrt.
+approximately log-transformed, and lstat and nox which were
+approximately transformed by sqrt.
 
-For the binary CHAS the transformation doesn’t make
-a lot of sense, though.
+For the binary CHAS the transformation doesn’t make a lot of
+sense, though.
 
 ---
 
@@ -1028,11 +1023,11 @@ a lot of sense, though.
 
 ???
 
-Here is a comparison of the feature vs response plot
-before and after the box-cox transformation.
+Here is a comparison of the feature vs response plot before
+and after the box-cox transformation.
 
-The dis, lstat and crim relationships now look a bit
-more obvious and linear.
+The dis, lstat and crim relationships now look a bit more
+obvious and linear.
 
 ---
 class: center, middle
