@@ -14,17 +14,17 @@
     <textarea id="source">
 
 class: center, middle
-        
+
 ![:scale 40%](images/sklearn_logo.png)
-        
+
 ### Introduction to Machine learning with scikit-learn
-        
+
 # Missing values
-        
+
 Andreas C. Müller
-        
+
 Columbia University, scikit-learn
-        
+
 .smaller[https://github.com/amueller/ml-workshop-1-of-4]
 
 ---
@@ -76,14 +76,14 @@ semi-supervised learning where you have the true target or
 the true class only for some data points, but not for all of
 them. So there's the first method which is very obvious.
 Let's say your data looks like this. All my illustrations
-today we'll be adding randomness to the iris data set. 
+today we'll be adding randomness to the iris data set.
 
 FIXME: Better digram for feature selection. What are the
 hypothesises for the tests
 ---
 
 .center[
-![:scale 80%](images/missing_values_img_1.png)
+![:scale 80%](images/row_nan_col_nan.png)
 ]
 
 ???
@@ -116,13 +116,13 @@ values. And so by excluding them from your training data,
 you're also excluding them from the validation. So it means
 you think you're doing very well because you discarded all
 the hard data points. Discarding data points is a little bit
-trickier and it depends on your situation. 
+trickier and it depends on your situation.
 
 
 ---
 
 .center[
-![:scale 100%](images/missing_values_img_2.png)
+![:scale 100%](images/imputation-schema.png)
 ]
 
 ???
@@ -199,7 +199,7 @@ regression model and 10 fold baseline, I get 77.2% accuracy.
 # Mean and Median
 
 .center[
-![:scale 100%](images/missing_values_img_4.png)
+![:scale 100%](images/imputation-median-schema.png)
 ]
 
 ???
@@ -216,7 +216,7 @@ values.
 ---
 
 .center[
-![:scale 100%](images/missing_values_img_5.png)
+![:scale 100%](images/median_imputation.png)
 ]
 
 ???
@@ -234,7 +234,7 @@ So there are two things about this. One, I kind of lost the
 class information a lot. Two, the data is now in places
 where there was no data before, which is not so great. You
 could do smart things like doing the mean per class, but
-that's actually not something that I've seen a lot. 
+that's actually not something that I've seen a lot.
 
 
 ---
@@ -304,7 +304,7 @@ for i, x1 in enumerate(X_train):
         dist = (x1 - x2) ** 2
         nan_mask = np.isnan(dist)
         distances[i, j] = dist[~nan_mask].mean() * X_train.shape[1]
-        
+
 neighbors = np.argsort(distances, axis=1)[:, 1:]
 n_neighbors = 3
 
@@ -332,7 +332,7 @@ logreg.score(X_test_knn, y_test)
 ]
 
 .center[
-![:scale 70%](images/missing_values_img_9.png)
+![:scale 70%](images/knn_imputation.png)
 ]
 
 ???
