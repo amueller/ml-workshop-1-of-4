@@ -79,12 +79,7 @@ class: center, middle
 Let’s start with the different scales.
 
 Many model want data that is on the same scale.
-KNearestNeighbors: If the distance in TAX is
-between 300 and 400 then the distance difference in
-CHArS doesn’t matter!
 
-Linear models: the different scales mean different penalty.
-L2 is the same for all!
 
 We can also see non-gaussian distributions here btw!
 ---
@@ -116,6 +111,8 @@ important feature gets entirely ignored because of the
 different scales. And usually the scales don't have any
 meaning - it could be a matter of changing meters to
 kilometers.
+Linear models: the different scales mean different penalty.
+L2 is the same for all!
 
 ---
 class: center
@@ -258,18 +255,18 @@ of 0 and 1. But the transformation is consistent with the
 transformation on the training set, so the data looks the
 same.
 
-On the right you see what happens when you use the
-test-set minimum and maximum for scaling the test
-set. That’s what would happen if you’d fit again on
-the test set. Now the test set also has minimum at 0
-and maximum at 1, but the data is totally distorted
-from what it was before. So don’t do that.
+On the right you see what happens when you use the test-set
+minimum and maximum for scaling the test set. That’s what
+would happen if you’d fit again on the test set. Now the
+test set also has minimum at 0 and maximum at 1, but the
+data is totally distorted from what it was before. So don’t
+do that.
 ---
 class: center, middle
 
 # Sckit-Learn API Summary
 
-![:scale 80%](images/api-table.png)
+![:scale 90%](images/api-table.png)
 
 
 ???
@@ -357,153 +354,13 @@ in this case.
 
 If we use KneighborsRegressor instead, we see a big
 difference. Without scaling R^2 is about .5, and with
-scaling it’s .75. That makes sense since we saw that
-for distance calculations basically all features are
-dominated by the TAX feature.
+scaling it’s .75. That makes sense since we saw that for
+distance calculations basically all features are dominated
+by the TAX feature.
 
 However, there is a bit of a problem with the analysis we
 did here. Can you see it?
 
----
-
-# Feature Distributions
-
-???
-
-Now that we discussed scaling and pipelines, let’s talk
-about some more preprocessing methods. One
-important aspect is dealing with different input
-distributions.
-
----
-
-class: left, middle
-
-.center[
-![:scale 85%](images/boston_scaled_box.png)
-]
-
-???
-
-Here is a box plot of the boston housing data after
-transforming it with the standard scaler. Even though
-the mean and standard deviation are the same for all
-features, the distributions are quite different. You can
-see very concentrated distributions like Crim and B,
-and very skewed distribuations like RAD and Tax
-(and also crim and B).
-
-Many models, in particular linear models and neural
-networks, work better if the features are
-approximately normal distributed.
-
-Let’s also check out the histograms of the data to see
-a bit better what’s going on.
-
----
-
-class: left, middle
-
-.center[
-![:scale 90%](images/boston_hist.png)
-]
-
-???
-
-Clearly CRIM and ZN and B are very peaked, and
-LSTAT and DIS and Age are very asymmetric.
-Sometimes you can use a hack like applying a
-logarithm to the data to get better behaved values.
-There is slightly more rigorous technique though.
-
----
-
-# Power Transformations (Box-Cox & Yeo-Johnson)
-.left-column[
-$$bc_{\lambda}(x) = \cases{\frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0\cr log(x) & \text{if } \lambda = 0 }$$
-]
-
-.right-column[
-![:scale 90%](images/boxcox_lambda.png)
-]
-
-.reset-column[
-```python
-from sklearn.preprocessing import PowerTransformer
-# Use "yeo-johnson" for positive+negative data
-pt = PowerTransformer(method='box-cox')
-pt.fit(X)
-```
-]
-???
-
-
-The Box-Cox transformation is a family of univariate
-functions to transform your data, parametrized by a
-parameter lambda. For lamda=1 the function is the
-identity, for lambda = 2 it is square, lambda =0 is log
-and there is many other functions in between. For a
-given dataset, a separate parameter lambda is
-determined for each feature, by minimizing the
-skewdness of the data (making skewdness close to
-zero, not close to -inf), so it is more “gaussian”. The
-skewdness of a function is a measure of the
-asymmetry of a function and is 0 for functions that
-are symmetric around their mean.
-Unfortunately the Box-Cox transformation is only
-applicable to positive features.
-
-
----
-
-.wide-left-column[
-![:scale 85%](images/boston_hist.png)
-]
-
-.narrow-right-column[Before]
-.clear-column[]
-
-.wide-left-column[![:scale 85%](images/boston_hist_boxcox.png)]
-.narrow-right-column[After]
-
-
-???
-
-Here are the histograms of the original data and the
-transformed data. The title of each subplot shows the
-estimated lambda. If the lambda is close to 1, the
-transformation didn’t change much. If it is away from
-1, there was a significant transformation.
-
-You can clearly see the effect on “CRIM” which was
-approximately log-transformed, and lstat and nox
-which were approximately transformed by sqrt.
-
-For the binary CHAS the transformation doesn’t make
-a lot of sense, though.
-
----
-
-
-.wide-left-column[
-![:scale 85%](images/boston_scatter.png)
-]
-
-.narrow-right-column[Before]
-.clear-column[]
-
-.wide-left-column[![:scale 85%](images/boston_bc_scaled_scatter.png)]
-.narrow-right-column[After]
-
-
-
-???
-
-Here is a comparison of the feature vs response plot
-before and after the box-cox transformation.
-
-The dis, lstat and crim relationships now look a bit
-more obvious and linear.
 
 ---
 
@@ -559,12 +416,36 @@ This is different from how many libraries in R do it,
 which deal with categorical variables implicitly.
 
 ---
+# Ordinal encoding
 
-class: center, middle
+.smaller[
+```python
+df['boro_ordinal'] = df.boro.astype("category").cat.codes
+df
+```
+]
+.left-column[
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>boro</th><th>boro_ordinal</th><th>vegan</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>Manhattan</td><td>2</td><td>No</td></tr>
+      <tr><th>1</th><td>Queens</td><td>3</td><td>No</td></tr>
+      <tr><th>2</th><td>Manhattan</td><td>2</td><td>No</td></tr>
+      <tr><th>3</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
+      <tr><th>4</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
+      <tr><th>5</th><td>Bronx</td><td>0</td><td>No</td></tr>
+    </tbody>
+  </table>
+]
 
-# Categorical Variables
-.center[![:scale 60%](images/color_categories.png)]
+--
 
+.right-column[
+![:scale 100%](images/boro_ordinal.png)
+]
 ???
 
 If you encode all three values using the same feature, then
@@ -574,6 +455,78 @@ Usually, there is no semantic ordering of the categories,
 and so we shouldn’t introduce one in our representation of
 the data.
 
+---
+# Ordinal encoding
+
+.smaller[
+```python
+df['boro_ordinal'] = df.boro.astype("category").cat.codes
+df
+```
+]
+.left-column[
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>boro</th><th>boro_ordinal</th><th>vegan</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>Manhattan</td><td>2</td><td>No</td></tr>
+      <tr><th>1</th><td>Queens</td><td>3</td><td>No</td></tr>
+      <tr><th>2</th><td>Manhattan</td><td>2</td><td>No</td></tr>
+      <tr><th>3</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
+      <tr><th>4</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
+      <tr><th>5</th><td>Bronx</td><td>0</td><td>No</td></tr>
+    </tbody>
+  </table>
+]
+
+.right-column[
+![:scale 100%](images/boro_ordinal_classification.png)
+]
+---
+
+# One-Hot (Dummy) Encoding
+
+.narrow-left-column[
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>boro</th><th>vegan</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>Manhattan</td><td>No</td></tr>
+      <tr><th>1</th><td>Queens</td><td>No</td></tr>
+      <tr><th>2</th><td>Manhattan</td><td>No</td></tr>
+      <tr><th>3</th><td>Brooklyn</td><td>Yes</td></tr>
+      <tr><th>4</th><td>Brooklyn</td><td>Yes</td></tr>
+      <tr><th>5</th><td>Bronx</td><td>No</td></tr>
+    </tbody>
+  </table>
+]
+
+.wide-right-column[
+.tiny[
+```python
+pd.get_dummies(df)
+```
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>boro_Bronx</th><th>boro_Brooklyn</th><th>boro_Manhattan</th><th>boro_Queens</th><th>vegan_No</th><th>vegan_Yes</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><th>1</th><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+      <tr><th>2</th><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><th>3</th><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+      <tr><th>4</th><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+      <tr><th>5</th><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    </tbody>
+  </table>
+]
+]
+???
 Instead, we add one new feature for each category,
 
 And that feature encodes whether a sample belongs to this
@@ -598,17 +551,103 @@ categorical.
 In this case we didn't actually want to transform the target variable vegan.
 
 ---
+# One-Hot (Dummy) Encoding
 
-class: center, middle
+.narrow-left-column[
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>boro</th><th>vegan</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>Manhattan</td><td>No</td></tr>
+      <tr><th>1</th><td>Queens</td><td>No</td></tr>
+      <tr><th>2</th><td>Manhattan</td><td>No</td></tr>
+      <tr><th>3</th><td>Brooklyn</td><td>Yes</td></tr>
+      <tr><th>4</th><td>Brooklyn</td><td>Yes</td></tr>
+      <tr><th>5</th><td>Bronx</td><td>No</td></tr>
+    </tbody>
+  </table>
+]
 
-.center[![:scale 60%](images/pandas_dummies1.png)]
-.center[![:scale 60%](images/pandas_dummies2.png)]
+.wide-right-column[
+.tiny[
+```python
+pd.get_dummies(df, columns=['boro'])
+```
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>vegan</th><th>boro_Bronx</th><th>boro_Brooklyn</th><th>boro_Manhattan</th><th>boro_Queens</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><th>1</th><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+      <tr><th>2</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><th>3</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+      <tr><th>4</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+      <tr><th>5</th><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    </tbody>
+  </table>
+]
+]
 
 ???
-N/A
+We can specify selectively which columns to apply the encoding to.
 
 ---
+# One-Hot (Dummy) Encoding
+.narrow-left-column[
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>boro</th><th>vegan</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>2</td><td>No</td></tr>
+      <tr><th>1</th><td>3</td><td>No</td></tr>
+      <tr><th>2</th><td>2</td><td>No</td></tr>
+      <tr><th>3</th><td>1</td><td>Yes</td></tr>
+      <tr><th>4</th><td>1</td><td>Yes</td></tr>
+      <tr><th>5</th><td>0</td><td>No</td></tr>
+    </tbody>
+  </table>
+]
+.wide-right-column[
+.tiny[
 
+```python
+pd.get_dummies(df_ordinal, columns=['boro'])
+```
+<table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th><th>vegan</th><th>boro_0</th><th>boro_1</th><th>boro_2</th><th>boro_3</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>0</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><th>1</th><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+      <tr><th>2</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><th>3</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+      <tr><th>4</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+      <tr><th>5</th><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    </tbody>
+  </table>
+]
+]
+???
+This also helps if the variable was already encoded using integers.
+Sometimes, someone has already encoded the categorical
+variables to integers like here. So here this is exactly the
+same information only except instead of strings you have
+them numbered. If you call the get_dummies on this nothing
+happens because none of them are object data types or
+categorical data types. If you want to look at the One Hot
+Encoding, you can explicitly pass columns equal and this
+will transform into boro_1, boro_2, boro_3.
+In this case get_dummies usually wouldn't do anything, but we can tell
+it which variables are categorical and it will dummy encode those for us.
+---
 class: center, middle
 
 .center[![:scale 50%](images/pandas_dummies3.png)]
@@ -854,6 +893,146 @@ Encoder or you just encode this as integers and treat it as
 a continuous. If you have very high categorical variables
 with many levels, maybe it keeping it as an integer might
 make more sense.
+---
+
+# Feature Distributions
+
+???
+
+Now that we discussed scaling and pipelines, let’s talk
+about some more preprocessing methods. One
+important aspect is dealing with different input
+distributions.
+
+---
+
+class: left, middle
+
+.center[
+![:scale 85%](images/boston_scaled_box.png)
+]
+
+???
+
+Here is a box plot of the boston housing data after
+transforming it with the standard scaler. Even though
+the mean and standard deviation are the same for all
+features, the distributions are quite different. You can
+see very concentrated distributions like Crim and B,
+and very skewed distribuations like RAD and Tax
+(and also crim and B).
+
+Many models, in particular linear models and neural
+networks, work better if the features are
+approximately normal distributed.
+
+Let’s also check out the histograms of the data to see
+a bit better what’s going on.
+
+---
+
+class: left, middle
+
+.center[
+![:scale 90%](images/boston_hist.png)
+]
+
+???
+
+Clearly CRIM and ZN and B are very peaked, and
+LSTAT and DIS and Age are very asymmetric.
+Sometimes you can use a hack like applying a
+logarithm to the data to get better behaved values.
+There is slightly more rigorous technique though.
+
+---
+
+# Power Transformations (Box-Cox & Yeo-Johnson)
+.left-column[
+$$bc_{\lambda}(x) = \cases{\frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0\cr log(x) & \text{if } \lambda = 0 }$$
+]
+
+.right-column[
+![:scale 90%](images/boxcox_lambda.png)
+]
+
+.reset-column[
+```python
+from sklearn.preprocessing import PowerTransformer
+# Use "yeo-johnson" for positive+negative data
+pt = PowerTransformer(method='box-cox')
+pt.fit(X)
+```
+]
+???
+
+
+The Box-Cox transformation is a family of univariate
+functions to transform your data, parametrized by a
+parameter lambda. For lamda=1 the function is the
+identity, for lambda = 2 it is square, lambda =0 is log
+and there is many other functions in between. For a
+given dataset, a separate parameter lambda is
+determined for each feature, by minimizing the
+skewdness of the data (making skewdness close to
+zero, not close to -inf), so it is more “gaussian”. The
+skewdness of a function is a measure of the
+asymmetry of a function and is 0 for functions that
+are symmetric around their mean.
+Unfortunately the Box-Cox transformation is only
+applicable to positive features.
+
+
+---
+
+.wide-left-column[
+![:scale 85%](images/boston_hist.png)
+]
+
+.narrow-right-column[Before]
+.clear-column[]
+
+.wide-left-column[![:scale 85%](images/boston_hist_boxcox.png)]
+.narrow-right-column[After]
+
+
+???
+
+Here are the histograms of the original data and the
+transformed data. The title of each subplot shows the
+estimated lambda. If the lambda is close to 1, the
+transformation didn’t change much. If it is away from
+1, there was a significant transformation.
+
+You can clearly see the effect on “CRIM” which was
+approximately log-transformed, and lstat and nox
+which were approximately transformed by sqrt.
+
+For the binary CHAS the transformation doesn’t make
+a lot of sense, though.
+
+---
+
+
+.wide-left-column[
+![:scale 85%](images/boston_scatter.png)
+]
+
+.narrow-right-column[Before]
+.clear-column[]
+
+.wide-left-column[![:scale 85%](images/boston_bc_scaled_scatter.png)]
+.narrow-right-column[After]
+
+
+
+???
+
+Here is a comparison of the feature vs response plot
+before and after the box-cox transformation.
+
+The dis, lstat and crim relationships now look a bit
+more obvious and linear.
 
 ---
 class: center, middle
