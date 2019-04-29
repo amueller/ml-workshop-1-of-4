@@ -28,6 +28,7 @@ Columbia University, scikit-learn
 
 .smaller[https://github.com/amueller/ml-workshop-1-of-4]
 
+
 ---
 
 # Other Resources
@@ -37,8 +38,9 @@ Columbia University, scikit-learn
 ![:scale 25%](images/imlp.png)&nbsp;&nbsp;&nbsp;
 ![:scale 25%](images/esl.png)
 ]
-Lecture: http://www.cs.columbia.edu/~amueller/comsw4995s18/schedule/
+Lecture: http://www.cs.columbia.edu/~amueller/comsw4995s19/schedule/
 
+https://www.youtube.com/andreasmueller
 
 Videos and more slides!
 
@@ -143,22 +145,6 @@ But that’s just facebook. Let’s see what else I’ve got open.
 ---
 
 .center[
-![:scale 70%](images/spotify.png)
-]
-
-???
-
-How about spotify? I’m German, so obviously I’m listening to Rammstein.
-What machine learning can we see here?
-There’s popular songs, which in this case are actually in the order of “likes”
-but in fact the algorithm also takes other features into account. And then
-theres Related Artists.  Is there other machine learning in spotify that you
-know of?  the artist radio, and of course, discover weekly. They also have a
-daily mix now, I think.
-
----
-
-.center[
 ![:scale 70%](images/amazon1.png)
 ]
 
@@ -225,6 +211,7 @@ class: center, middle
 There are three main branches of machine learning.
 Who can name them?
 ---
+class: spacious
 
 # Types of Machine Learning
 - Supervised
@@ -275,7 +262,38 @@ gives you the correct answers y_i.
 
 ---
 
+# Generalization
+.padding-top[
+.left-column[
+Not only
+
+
+also for new data:
+]
+
+.right-column[$f(x_i) \approx y_i$,
+
+
+$f(x) \approx y$
+]]
+???
+For both regression and classification, it’s important to keep in mind the
+concept of generalization.
+Let’s say we have a regression task. We have features, that is data vectors x_i
+and targets y_i drawn from a joint distribution. We now want to learn a
+function f, such that f(x) is approximately y, not on this training data, but
+on new data drawn from this distribution. This is what’s called generalization,
+and this is a core distinction to function approximation. In principle we don’t
+care about how well we do on x_i, we only care how well we do on new samples
+from the distribution. We’ll go into much more detail about generalization in
+about a week, when we dive into supervised learning. 
+
+---
+class: spacious
 # Examples of Supervised Learning
+- spam detection
+- medical diagnosis
+- add click prediction
 
 ???
 
@@ -414,29 +432,6 @@ between the outcomes, which would make it a regression problem.
 Both formulations could work, and there are approaches that combine the two for
 this particular problem.
 
----
-
-# Generalization
-
-.left-column[
-Not only <br />
-also for new data:
-]
-
-.right-column[$f(x_i) \approx y_i$,<br />
-$f(x) \approx y$
-]
-???
-For both regression and classification, it’s important to keep in mind the
-concept of generalization.
-Let’s say we have a regression task. We have features, that is data vectors x_i
-and targets y_i drawn from a joint distribution. We now want to learn a
-function f, such that f(x) is approximately y, not on this training data, but
-on new data drawn from this distribution. This is what’s called generalization,
-and this is a core distinction to function approximation. In principle we don’t
-care about how well we do on x_i, we only care how well we do on new samples
-from the distribution. We’ll go into much more detail about generalization in
-about a week, when we dive into supervised learning. 
 
 ---
 
@@ -558,6 +553,70 @@ understand.
 
 ---
 
+class: middle
+
+# Thinking in Context!
+# What is the baseline?
+# What is the benefit?
+
+???
+
+So think in context of your problem. What do you want to achieve? What is the
+easiest way to achieve this? And what will improving over this baseline buy
+you?
+
+Let’s go through an example:
+Imagine you had an electronics store, but you realized retail is all digital
+and you’re closing your store with one big sale to move on. You want to do an
+email campaign to tell all your customers about the sale. Is there a machine
+learning application here? You could try A/B testing the email message. But
+that will only work if you have many many customers. You could use ML to
+predict which customers might respond. How do you get the data? Let’s say you
+have data. What’s the benefit? None! This is your closing sale. You’ll never
+email them again. It doesn’t matter if they’ll include you in your spam filter.
+Just email everybody!
+
+---
+
+
+class: middle
+
+# Communicating Results
+
+???
+
+Another very important aspect of machine learning is to be able to communicate
+results, and to be able to explain methodologies. If you’re want to use machine learning
+in research that's not computer science, you need to be able to
+explain why it works. If you automatically make some decisions in your business
+applications, you need to convince your boss that nothing crazy will happen.
+How do you do that? It’s an important skill to explain what particular results
+mean, what their impact will be, and how often a method will work or fail.
+Only if you can convince your manager your approach is sensible will your
+system go to production.
+
+---
+
+class: middle, center
+
+# Explainable Results
+
+![:scale 60%](images/amazon_explanations.png)
+
+???
+
+Sometimes, you even need to explain to the user why you made a decision. People
+found that recommendation engines work much better if the users are shown a
+reason for a particular recommendation. Netflix tells you based on what show it
+recommends another show, Amazon does the same for products. Interestingly,
+this also works even if the explanation is not true. There are systems that
+make a recommendation, and then provide a believable “explanation” after the
+fact. That gets more engagement than just providing the recommendation, though
+some people might question the ethics of that. Earlier I said in ML we are
+just interested in good predictions. If you need to be able to explain your
+predictions, this is no longer true.
+
+---
 class: middle, center
 
 # Sidebar: Ethical Considerations
