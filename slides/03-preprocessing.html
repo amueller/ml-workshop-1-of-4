@@ -16,18 +16,18 @@
 class: center, middle
 
 ![:scale 40%](images/sklearn_logo.png)
-        
+
 ### Introduction to Machine learning with scikit-learn
 
 # Preprocessing
-        
+
 Andreas C. Müller
-        
+
 Columbia University, scikit-learn
-        
+
 .smaller[https://github.com/amueller/ml-workshop-1-of-4]
-        
-        
+
+
 
 ???
 Today we’ll talk about preprocessing and featureengineering. What we’re talking about today mostly
@@ -657,8 +657,8 @@ array([[ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
 categorical = df.dtypes == object
 
 preprocess = make_column_transformer(
-    (~categorical, StandardScaler()),
-    (categorical, OneHotEncoder())
+    (StandardScaler(), ~categorical),
+    (OneHotEncoder(), categorical))
 ```
 
 ---
