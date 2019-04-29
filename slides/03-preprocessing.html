@@ -657,8 +657,8 @@ array([[ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
 categorical = df.dtypes == object
 
 preprocess = make_column_transformer(
-    (~categorical, StandardScaler()),
-    (categorical, OneHotEncoder())
+    (StandardScaler(), ~categorical),
+    (OneHotEncoder(), categorical))
 ```
 
 ---
