@@ -35,10 +35,6 @@ applies to linear models, and not to tree-based
 models, but it also applies to neural nets and kernel
 SVMs.
 
-FIXME: remove Yeo-Johnson?
-FIXME: add illustration of why one-hot is better than integer encoding
-FIXME: add rank scaler
-
 ---
 
 class: middle
@@ -375,26 +371,27 @@ class: left, middle
 .smaller[
 ```python
 import pandas as pd
-df = pd.DataFrame(
-    {'boro': ['Manhattan', 'Queens', 'Manhattan', 'Brooklyn', 'Brooklyn', 'Bronx'],
-     'vegan': ['No', 'No','No','Yes', 'Yes', 'No']})
+df = pd.DataFrame({
+  'boro': ['Manhattan', 'Queens', 'Manhattan', 'Brooklyn', 'Brooklyn', 'Bronx'],
+  'salary': [103, 89, 142, 54, 63, 219],
+  'vegan': ['No', 'No','No','Yes', 'Yes', 'No']})
 ```
 ]
 
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>boro</th><th>vegan</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>Manhattan</td><td>No</td></tr>
-      <tr><th>1</th><td>Queens</td><td>No</td></tr>
-      <tr><th>2</th><td>Manhattan</td><td>No</td></tr>
-      <tr><th>3</th><td>Brooklyn</td><td>Yes</td></tr>
-      <tr><th>4</th><td>Brooklyn</td><td>Yes</td></tr>
-      <tr><th>5</th><td>Bronx</td><td>No</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>Manhattan</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>Queens</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>Manhattan</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>Brooklyn</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>Brooklyn</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>Bronx</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
 ???
 
 Before we can apply a machine learning algorithm, we first
@@ -426,19 +423,19 @@ df
 ]
 .left-column[
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>boro</th><th>boro_ordinal</th><th>vegan</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>Manhattan</td><td>2</td><td>No</td></tr>
-      <tr><th>1</th><td>Queens</td><td>3</td><td>No</td></tr>
-      <tr><th>2</th><td>Manhattan</td><td>2</td><td>No</td></tr>
-      <tr><th>3</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
-      <tr><th>4</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
-      <tr><th>5</th><td>Bronx</td><td>0</td><td>No</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>2</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>3</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>2</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>1</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>1</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>0</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
 ]
 
 --
@@ -466,19 +463,19 @@ df
 ]
 .left-column[
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>boro</th><th>boro_ordinal</th><th>vegan</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>Manhattan</td><td>2</td><td>No</td></tr>
-      <tr><th>1</th><td>Queens</td><td>3</td><td>No</td></tr>
-      <tr><th>2</th><td>Manhattan</td><td>2</td><td>No</td></tr>
-      <tr><th>3</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
-      <tr><th>4</th><td>Brooklyn</td><td>1</td><td>Yes</td></tr>
-      <tr><th>5</th><td>Bronx</td><td>0</td><td>No</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>2</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>3</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>2</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>1</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>1</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>0</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
 ]
 
 .right-column[
@@ -490,19 +487,19 @@ df
 
 .narrow-left-column[
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>boro</th><th>vegan</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>Manhattan</td><td>No</td></tr>
-      <tr><th>1</th><td>Queens</td><td>No</td></tr>
-      <tr><th>2</th><td>Manhattan</td><td>No</td></tr>
-      <tr><th>3</th><td>Brooklyn</td><td>Yes</td></tr>
-      <tr><th>4</th><td>Brooklyn</td><td>Yes</td></tr>
-      <tr><th>5</th><td>Bronx</td><td>No</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>Manhattan</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>Queens</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>Manhattan</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>Brooklyn</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>Brooklyn</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>Bronx</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
 ]
 
 .wide-right-column[
@@ -510,20 +507,20 @@ df
 ```python
 pd.get_dummies(df)
 ```
-<table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>boro_Bronx</th><th>boro_Brooklyn</th><th>boro_Manhattan</th><th>boro_Queens</th><th>vegan_No</th><th>vegan_Yes</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
-      <tr><th>1</th><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
-      <tr><th>2</th><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
-      <tr><th>3</th><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
-      <tr><th>4</th><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
-      <tr><th>5</th><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-    </tbody>
-  </table>
+<table border="1" class="dataframe" style="font-size:15px">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>salary</th><th>boro_Bronx</th><th>boro_Brooklyn</th><th>boro_Manhattan</th><th>boro_Queens</th><th>vegan_No</th><th>vegan_Yes</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>103</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>1</th><td>89</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+    <tr><th>2</th><td>142</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>3</th><td>54</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><th>4</th><td>63</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><th>5</th><td>219</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+  </tbody>
+</table>
 ]
 ]
 ???
@@ -555,19 +552,19 @@ In this case we didn't actually want to transform the target variable vegan.
 
 .narrow-left-column[
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>boro</th><th>vegan</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>Manhattan</td><td>No</td></tr>
-      <tr><th>1</th><td>Queens</td><td>No</td></tr>
-      <tr><th>2</th><td>Manhattan</td><td>No</td></tr>
-      <tr><th>3</th><td>Brooklyn</td><td>Yes</td></tr>
-      <tr><th>4</th><td>Brooklyn</td><td>Yes</td></tr>
-      <tr><th>5</th><td>Bronx</td><td>No</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>Manhattan</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>Queens</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>Manhattan</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>Brooklyn</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>Brooklyn</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>Bronx</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
 ]
 
 .wide-right-column[
@@ -575,20 +572,20 @@ In this case we didn't actually want to transform the target variable vegan.
 ```python
 pd.get_dummies(df, columns=['boro'])
 ```
-<table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>vegan</th><th>boro_Bronx</th><th>boro_Brooklyn</th><th>boro_Manhattan</th><th>boro_Queens</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-      <tr><th>1</th><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
-      <tr><th>2</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-      <tr><th>3</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
-      <tr><th>4</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
-      <tr><th>5</th><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
-    </tbody>
-  </table>
+<table border="1" class="dataframe" style="font-size:15px">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>salary</th><th>vegan</th><th>boro_Bronx</th><th>boro_Brooklyn</th><th>boro_Manhattan</th><th>boro_Queens</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>103</td><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>1</th><td>89</td><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><th>2</th><td>142</td><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>3</th><td>54</td><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>4</th><td>63</td><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>5</th><td>219</td><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+  </tbody>
+</table>
 ]
 ]
 
@@ -599,40 +596,40 @@ We can specify selectively which columns to apply the encoding to.
 # One-Hot (Dummy) Encoding
 .narrow-left-column[
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>boro</th><th>vegan</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>2</td><td>No</td></tr>
-      <tr><th>1</th><td>3</td><td>No</td></tr>
-      <tr><th>2</th><td>2</td><td>No</td></tr>
-      <tr><th>3</th><td>1</td><td>Yes</td></tr>
-      <tr><th>4</th><td>1</td><td>Yes</td></tr>
-      <tr><th>5</th><td>0</td><td>No</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>2</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>3</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>2</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>1</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>1</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>0</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
 ]
 .wide-right-column[
 .tiny[
 
 ```python
-pd.get_dummies(df_ordinal, columns=['boro'])
+pd.get_dummies(df_ordinal)
 ```
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>vegan</th><th>boro_0</th><th>boro_1</th><th>boro_2</th><th>boro_3</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-      <tr><th>1</th><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
-      <tr><th>2</th><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-      <tr><th>3</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
-      <tr><th>4</th><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
-      <tr><th>5</th><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>2</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>3</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>2</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>1</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>1</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>0</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
 ]
 ]
 ???
@@ -648,25 +645,109 @@ will transform into boro_1, boro_2, boro_3.
 In this case get_dummies usually wouldn't do anything, but we can tell
 it which variables are categorical and it will dummy encode those for us.
 ---
-class: center, middle
+# One-Hot (Dummy) Encoding
+.narrow-left-column[
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>2</td><td>103</td><td>No</td></tr>
+    <tr><th>1</th><td>3</td><td>89</td><td>No</td></tr>
+    <tr><th>2</th><td>2</td><td>142</td><td>No</td></tr>
+    <tr><th>3</th><td>1</td><td>54</td><td>Yes</td></tr>
+    <tr><th>4</th><td>1</td><td>63</td><td>Yes</td></tr>
+    <tr><th>5</th><td>0</td><td>219</td><td>No</td></tr>
+  </tbody>
+</table>
+]
+.wide-right-column[
+.tiny[
 
-.center[![:scale 50%](images/pandas_dummies3.png)]
-.left-column[![:scale 30%](images/pandas_dummies4.png)]
-.right-column[![:scale 50%](images/pandas_dummies5.png)]
-
+```python
+pd.get_dummies(df_ordinal, columns=['boro'])
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>salary</th><th>vegan</th><th>boro_0</th><th>boro_1</th><th>boro_2</th><th>boro_3</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>103</td><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>1</th><td>89</td><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><th>2</th><td>142</td><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>3</th><td>54</td><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>4</th><td>63</td><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>5</th><td>219</td><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+  </tbody>
+</table>
+]
+]
 ???
-Let's say instead of predicting whether someone is vegan,
-we want to predict their salary.
-That would also be an integer.
-There is no way to a-priory distinguish that one of These
-should be treated as categorical and one as ordinal or continuous.
+This also helps if the variable was already encoded using integers.
+Sometimes, someone has already encoded the categorical
+variables to integers like here. So here this is exactly the
+same information only except instead of strings you have
+them numbered. If you call the get_dummies on this nothing
+happens because none of them are object data types or
+categorical data types. If you want to look at the One Hot
+Encoding, you can explicitly pass columns equal and this
+will transform into boro_1, boro_2, boro_3.
+In this case get_dummies usually wouldn't do anything, but we can tell
+it which variables are categorical and it will dummy encode those for us.
 
 ---
-
-class: center, middle
-
-.center[![:scale 70%](images/pandas_dummies_column_mismatch.png)]
-
+.tiny[
+.left-column[
+```python
+df = pd.DataFrame({
+  'boro': ['Manhattan', 'Queens', 'Manhattan',
+           'Brooklyn', 'Brooklyn', 'Bronx'],
+  'salary': [103, 89, 142, 54, 63, 219],
+  'vegan': ['No', 'No','No','Yes', 'Yes', 'No']})
+df_dummies = pd.get_dummies(df, columns=['boro']
+```
+<table border="1" class="dataframe" style="font-size:12px">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>salary</th><th>vegan</th><th>boro_Bronx</th><th>boro_Brooklyn</th><th>boro_Manhattan</th><th>boro_Queens</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>103</td><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>1</th><td>89</td><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><th>2</th><td>142</td><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>3</th><td>54</td><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>4</th><td>63</td><td>Yes</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>5</th><td>219</td><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+  </tbody>
+</table>
+]
+.right-column[
+```python
+df = pd.DataFrame({
+  'boro': ['Brooklyn', 'Manhattan', 'Brooklyn',
+           'Queens', 'Brooklyn', 'Staten Island'],
+  'salary': [61, 146, 142, 212, 98, 47],
+  'vegan': ['Yes', 'No','Yes','No', 'Yes', 'No']})
+df_dummies = pd.get_dummies(df, columns=['boro'])
+```
+<table border="1" class="dataframe" style="font-size:12px">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>salary</th><th>vegan</th><th style="color:red">boro_Brooklyn</th>
+      <th style="color:red">boro_Manhattan</th><th style="color:red">boro_Queens</th><th style="color:red">boro_Staten Island</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>61</td><td>Yes</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><th>1</th><td>146</td><td>No</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>2</th><td>142</td><td>Yes</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><th>3</th><td>212</td><td>No</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><th>4</th><td>98</td><td>Yes</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><th>5</th><td>47</td><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+  </tbody>
+</table>
+]]
 ???
 If someone else gives you a new data set and in this new
 data set there is Staten Island, Manhattan, Bronx and
@@ -688,31 +769,34 @@ class: smaller
 
 .smaller[
 ```python
-import pandas as pd
-df = pd.DataFrame({'salary': [103, 89, 142, 54, 63, 219],
-                   'boro': ['Manhattan', 'Queens', 'Manhattan',
-                            'Brooklyn', 'Brooklyn', 'Bronx']})
 
-df['boro'] = pd.Categorical(df.boro, categories=['Manhattan', 'Queens', 'Brooklyn',
-                                                'Bronx', 'Staten Island'])
-pd.get_dummies(df)
+df = pd.DataFrame({
+   'boro': ['Manhattan', 'Queens', 'Manhattan', 'Brooklyn', 'Brooklyn', 'Bronx'],
+   'salary': [103, 89, 142, 54, 63, 219],
+   'vegan': ['No', 'No','No','Yes', 'Yes', 'No']})
+
+df['boro'] = pd.Categorical(df.boro,
+                            categories=['Manhattan', 'Queens', 'Brooklyn',
+                                        'Bronx', 'Staten Island'])
+pd.get_dummies(df, columns=['boro'])
 ```
 ]
 .tiny[
+
 <table border="1" class="dataframe">
-    <thead>
-      <tr style="text-align: right;">
-        <th></th><th>salary</th><th>boro_Manhattan</th><th>boro_Queens</th><th>boro_Brooklyn</th><th>boro_Bronx</th><th>boro_Staten Island</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>0</th><td>103</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-      <tr><th>1</th><td>89</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
-      <tr><th>2</th><td>142</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-      <tr><th>3</th><td>54</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
-      <tr><th>4</th><td>63</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
-      <tr><th>5</th><td>219</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th><th>salary</th><th>vegan</th><th>boro_Manhattan</th><th>boro_Queens</th><th>boro_Brooklyn</th><th>boro_Bronx</th><th>boro_Staten Island</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>0</th><td>103</td><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><th>1</th><td>89</td><td>No</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><th>2</th><td>142</td><td>No</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><th>3</th><td>54</td><td>Yes</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>4</th><td>63</td><td>Yes</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><th>5</th><td>219</td><td>No</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+  </tbody>
+</table>
 ]
 
 
@@ -736,58 +820,6 @@ values are actually in the data set.
 
 ---
 
-#OneHotEncoder
-
-```python
-from sklearn.preprocessing import OneHotEncoder
-
-df = pd.DataFrame({'salary': [103, 89, 142, 54, 63, 219],
-                   'boro': [0, 1, 0, 2, 2, 3]})
-
-ohe = OneHotEncoder(categorical_features=[0]).fit(df)
-ohe.transform(df).toarray()
-```
-```
-array([[   1.,    0.,    0.,    0.,  103.],
-       [   0.,    1.,    0.,    0.,   89.],
-       [   1.,    0.,    0.,    0.,  142.],
-       [   0.,    0.,    1.,    0.,   54.],
-       [   0.,    0.,    1.,    0.,   63.],
-       [   0.,    0.,    0.,    1.,  219.]])
-```
-.smaller[
-- Legacy mode: Only works for integers right now, not strings.
-- New mode: works on strings and integers, but always transforms all columns.
-]
-???
-You can also do this with scikit-learn. There are two ways
-to do this scikit-learn. Here's the old way.
-It’s a transformer, so you can call fit on something and
-call transform on something else. This fit transform
-paradigm in scikit-learn prevents you from having these
-columns matches. What this does is basically, it only
-considers the ones that are there during training and if
-there's a new value coming in during testing, it either
-throws that out or gives you an error depending on what
-parameters you set. This will actually produce by default,
-the sparse matrix so it will not actually store all the
-zeros. an You can also set a configuration option so that it
-will always return. The annoying thing with this is, this
-works only for integers. So one hot encoder, if you give it
-a string, it'll just say no. The one hot encoder assumes
-that the integers are from zero to number of categories, so
-if I would want to encode the salary column, it'll create
-219 features, which are also not always what you want. The
-other way to do it is a new way which is not released yet.
-What this does is it works on strings and integers. But it
-always does it on all columns and it computes the unique
-values. Here for salary there six unique value, so add six
-columns for salary and then there are four values for
-borough. So this is actually what you want but you only want
-to apply it to a subset of the columns.
-
-
----
 
 # OneHotEncoder
 
@@ -825,7 +857,6 @@ preprocess = make_column_transformer(
     (StandardScaler(), ~categorical),
     (OneHotEncoder(), categorical))
 
-model = make_pipeline(preprocess, LogisticRegression())
 ```
 ???
 New in scikit-learn 0.20 is the column transformer, which
