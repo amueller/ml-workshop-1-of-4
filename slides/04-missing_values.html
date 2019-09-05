@@ -216,7 +216,7 @@ values.
 ---
 
 .center[
-![:scale 100%](images/median_imputation.png)
+![:scale 90%](images/median_imputation.png)
 ]
 
 ???
@@ -276,54 +276,15 @@ class: spacious
 - Find k nearest neighbors that have non-missing values.
 - Fill in all missing values using the average of the
 neighbors.
-- PR in scikit-learn: https://github.com/scikit-learn/scikit-learn/pull/9212
 
 .smaller[
 ```python
-# not merged yet!
-knn_pipe = make_pipeline(KNNImputer(), StandardScaler(), LogisticRegression())
-np.mean(scores)
-```
-```
-0.849
-```
-]
-
----
-
-# KNN Imputation
-
-.smaller[
-```python
-# Very inefficient didactic implementation
-
-distances = np.zeros((X_train.shape[0], X_train.shape[0]))
-for i, x1 in enumerate(X_train):
-    for j, x2 in enumerate(X_train):
-        dist = (x1 - x2) ** 2
-        nan_mask = np.isnan(dist)
-        distances[i, j] = dist[~nan_mask].mean() * X_train.shape[1]
-
-neighbors = np.argsort(distances, axis=1)[:, 1:]
-n_neighbors = 3
-
-X_train_knn = X_train.copy()
-for feature in range(X_train.shape[1]):
-    has_missing_value = np.isnan(X_train[:, feature])
-    for row in np.where(has_missing_value)[0]:
-        neighbor_features = X_train[neighbors[row], feature]
-        non_nan_neighbors = neighbor_features[~np.isnan(neighbor_features)]
-        X_train_knn[row, feature] = non_nan_neighbors[:n_neighbors].mean()
-```
-]
-
-???
-
----
-.smaller[
-```python
-logreg.fit(X_train_knn, y_train)
-logreg.score(X_test_knn, y_test)
+from sklearn.impute import KNNImputer
+knnimp = KNNImputer().fit(X_train)
+X_train_knn = knnimp.transform(X_train)
+lr = LogisticRegression().fit(X_train_knn, y_train)
+X_test_knn = knnimp.transform(X_test)
+lr.score(X_test_knnimp, y_test)
 ```
 ```
 0.849
@@ -331,8 +292,9 @@ logreg.score(X_test_knn, y_test)
 ]
 
 .center[
-![:scale 70%](images/knn_imputation.png)
+![:scale 60%](images/knn_imputation.png)
 ]
+
 
 ???
 
