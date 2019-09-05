@@ -284,7 +284,7 @@ knnimp = KNNImputer().fit(X_train)
 X_train_knn = knnimp.transform(X_train)
 lr = LogisticRegression().fit(X_train_knn, y_train)
 X_test_knn = knnimp.transform(X_test)
-lr.score(X_test_knnimp, y_test)
+lr.score(X_test_knn, y_test)
 ```
 ```
 0.849
@@ -295,8 +295,56 @@ lr.score(X_test_knnimp, y_test)
 ![:scale 60%](images/knn_imputation.png)
 ]
 
+???
+
+---
+
+# Model-Driven Imputation
+
+- Train regression model for missing values
+- Iterate: retrain after filling in
+- IterativeImputer in next sklearn release
+
+.smaller[
+```python
+rf_imp = IterativeImputer(predictor=RandomForestRegressor(n_estimators=100))
+rf_imp.fit(X_train)
+X_train_rf = rf_imp.transform(X_train)
+lr = LogisticRegression().fit(X_train_rf, y_train)
+X_test_rf = rf_imp.transform(X_test)
+lr.score(X_test_rf, y_test)
+```
+```
+0.845
+```
+]
 
 ???
+The next step up in complexity is using an arbitrary
+regression model for imputation. I mean, arguably, the kNN
+is also a regression model, but there's like some
+intricacies that make it a little bit different. So the idea
+with using a regression model is you do the first pass and
+impute data using the mean. And then you try to predict the
+missing features using a regression model trained on the
+non-missing features and then you iterate this until stuff
+doesn't change anymore. You can use any model you like, and
+this is very flexible, and it can be fast if you have a fast
+model.
+---
+class: spacious
+
+# Comparision of Imputation Methods
+
+.center[
+![:scale 100%](images/med_knn_rf_comparison.png)
+]
+
+???
+FIXME better illustration/ graph
+Here's a comparison on the iris dataset again.
+This is a very artificial example and is only meant to illustrate the ideas.
+In practice, using the mean or median is actually quite decent.
 
 
     </textarea>
