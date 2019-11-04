@@ -15,7 +15,7 @@ knn.fit(X_train, y_train)
 print("test set score of knn: %f" % knn.score(X_test, y_test))
 
 # Training RandomForest
-rf = RandomForestClassifier(n_estimators=100)
+rf = RandomForestClassifier()
 rf.fit(X_train, y_train)
 rf.score(X_train, y_train)
 rf.score(X_test, y_test)

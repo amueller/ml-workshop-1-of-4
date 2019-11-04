@@ -307,7 +307,7 @@ lr.score(X_test_knn, y_test)
 
 .smaller[
 ```python
-rf_imp = IterativeImputer(predictor=RandomForestRegressor(n_estimators=100))
+rf_imp = IterativeImputer(predictor=RandomForestRegressor())
 rf_imp.fit(X_train)
 X_train_rf = rf_imp.transform(X_train)
 lr = LogisticRegression().fit(X_train_rf, y_train)
