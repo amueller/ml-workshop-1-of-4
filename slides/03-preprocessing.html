@@ -75,7 +75,12 @@ class: center, middle
 Let’s start with the different scales.
 
 Many model want data that is on the same scale.
+KNearestNeighbors: If the distance in TAX is
+between 300 and 400 then the distance difference in
+CHArS doesn’t matter!
 
+Linear models: the different scales mean different
+penalty. L2 is the same for all!
 
 We can also see non-gaussian distributions here btw!
 ---
@@ -362,7 +367,7 @@ did here. Can you see it?
 
 class: left, middle
 
-# Discrete features
+# Categorical Variables
 
 ---
 
@@ -858,7 +863,7 @@ preprocess = make_column_transformer(
 
 ```
 ???
-New in scikit-learn 0.20 is the column transformer, which
+The way to use this with mixed type data is column transformer, which
 allows you to transforms only some of the columns. For
 example, you can call categorical encoder only on the
 categorical columns and call StandardScaler on the
