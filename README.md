@@ -29,12 +29,10 @@ This workshop assumes familiarity with Jupyter notebooks and basics of pandas, m
 
 Content
 -------
-- Types of machine learning, basics of supervised learning
-- Data loading with pandas
-- Data requirements for scikit-learn
-- Building classification and regression models
-- The scikit-learn API
-- Fundamentals of Data Preprocessing
+- [What is machine learning and what can it do for you?](https://amueller.github.io/ml-workshop-1-of-4/slides/01-introduction.html) Types of machine learning, basics of supervised learning
+- [Data loading and basic API of scikit-learn](https://amueller.github.io/ml-workshop-1-of-4/slides/02-supervised-learning)
+- [Fundamentals of Data Preprocessing: scaling and categorical data](https://amueller.github.io/ml-workshop-1-of-4/slides/03-preprocessing)
+- [Imputation: dealing with missing values](https://amueller.github.io/ml-workshop-1-of-4/slides/04-missing_values)
 
 
 Obtaining the Tutorial Material
