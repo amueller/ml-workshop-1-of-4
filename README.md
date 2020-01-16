@@ -8,6 +8,12 @@ Other parts:
 - [Part 3](https://github.com/amueller/ml-workshop-3-of-4)
 - [Part 4](https://github.com/amueller/ml-workshop-4-of-4)
 
+Content
+-------
+- [What is machine learning and what can it do for you?](https://amueller.github.io/ml-workshop-1-of-4/slides/01-introduction.html)
+- [Data loading and basic API of scikit-learn](https://amueller.github.io/ml-workshop-1-of-4/slides/02-supervised-learning)
+- [Fundamentals of Data Preprocessing: scaling and categorical data](https://amueller.github.io/ml-workshop-1-of-4/slides/03-preprocessing)
+- [Imputation: dealing with missing values](https://amueller.github.io/ml-workshop-1-of-4/slides/04-missing_values)
 
 Instructor
 -----------
@@ -26,13 +32,6 @@ Machine learning has become an indispensable tool across many areas of research 
 Prerequisites
 -------------
 This workshop assumes familiarity with Jupyter notebooks and basics of pandas, matplotlib and numpy.
-
-Content
--------
-- [What is machine learning and what can it do for you?](https://amueller.github.io/ml-workshop-1-of-4/slides/01-introduction.html)
-- [Data loading and basic API of scikit-learn](https://amueller.github.io/ml-workshop-1-of-4/slides/02-supervised-learning)
-- [Fundamentals of Data Preprocessing: scaling and categorical data](https://amueller.github.io/ml-workshop-1-of-4/slides/03-preprocessing)
-- [Imputation: dealing with missing values](https://amueller.github.io/ml-workshop-1-of-4/slides/04-missing_values)
 
 
 Obtaining the Tutorial Material

@@ -36,12 +36,24 @@ plt.figure()
 plt.title("By race")
 data.groupby("race").income_bin.mean().sort_values().plot.barh()
 
+
 # Exercise 3
+# using pd.get_dummies
 data_one_hot = pd.get_dummies(data_features)
 X_train, X_test, y_train, y_test = train_test_split(data_one_hot, income)
 
 scaler = MinMaxScaler().fit(X_train)
 X_train_scaled = scaler.transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# using OneHotEncoder
+cont_features = data_features.dtypes == "int64"
+ct = make_column_transformer((OneHotEncoder(), ~cont_features),
+                             (StandardScaler(), cont_features))
+X_train, X_test, y_train, y_test = train_test_split(data_features, income)
+X_train_scaled = ct.fit_transform(X_train)
+X_test_scaled = ct.transform(X_test)
+
 
 # Exercise 4
 from sklearn.linear_model import LogisticRegression
@@ -49,7 +61,6 @@ logreg = LogisticRegression(C=0.1)
 logreg.fit(X_train_scaled, y_train)
 print("Training score:", logreg.score(X_train_scaled, y_train))
 
-X_test_scaled = scaler.transform(X_test)
 print("Test score:", logreg.score(X_test_scaled, y_test))
-      
+
 print("Faction <= 50k", (y_train.values == " <=50K").mean())
