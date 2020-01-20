@@ -11,9 +11,9 @@ Other parts:
 Content
 -------
 - [What is machine learning and what can it do for you?](https://amueller.github.io/ml-workshop-1-of-4/slides/01-introduction.html)
-- [Data loading and basic API of scikit-learn](https://amueller.github.io/ml-workshop-1-of-4/slides/02-supervised-learning)
-- [Fundamentals of Data Preprocessing: scaling and categorical data](https://amueller.github.io/ml-workshop-1-of-4/slides/03-preprocessing)
-- [Imputation: dealing with missing values](https://amueller.github.io/ml-workshop-1-of-4/slides/04-missing_values)
+- [Data loading and basic API of scikit-learn](https://amueller.github.io/ml-workshop-1-of-4/slides/02-supervised-learning.html)
+- [Fundamentals of Data Preprocessing: scaling and categorical data](https://amueller.github.io/ml-workshop-1-of-4/slides/03-preprocessing.html)
+- [Imputation: dealing with missing values](https://amueller.github.io/ml-workshop-1-of-4/slides/04-missing_values.html)
 
 Instructor
 -----------
