@@ -39,18 +39,13 @@ SVMs.
 
 class: middle
 
-![:scale 90%](images/boston_scatter.png)
+# King County House Prices
+
+![:scale 90%](images/house_price_scatter.png)
+
 
 
 ???
-Let’s go back to the boston housing dataset. The idea
-was to predict house prices. Here are the features on
-the x axis and the response, so price, on the y axis.
-
-What are some thing you can notice? (concentrated
-distributions, skewed distibutions, discrete variable,
-linear and non-linear effects, different scales)
-
 ---
 
 
@@ -67,7 +62,7 @@ N/A
 class: center, middle
 
 .center[
-![:scale 70%](images/boston_ranges.png)
+![:scale 70%](images/house_price_boxplot.png)
 ]
 
 
@@ -168,6 +163,7 @@ class: spacious
 
 ???
 
+FIXME ugly slide
 There’s another one that's important for sparse data. It’s
 called the MaxAbsScaler in scikit-learn. So sparse data is
 the kind of data that happens actually quite frequently in
@@ -201,7 +197,7 @@ scaling by one divided by the maximum absolute value.
 
 ```python
 from sklearn.linear_model import Ridge
-X, y = boston.data, boston.target
+# Back to King Country house prices
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, random_state=0)
 
@@ -214,7 +210,7 @@ X_test_scaled = scaler.transform(X_test)
 ridge.score(X_test_scaled, y_test)
 ```
 ```
-0.634
+0.684
 ```
 
 ???
@@ -343,7 +339,7 @@ knn.score(X_test_scaled, y_test)
 
 ???
 
-Let’s apply the scaler to the Boston housing data.
+Let’s apply the scaler to the King Country housing data.
 
 First I used the StandardScaler to scale the training data.
 Then I applied ten-fold cross-validation to evaluate the
@@ -470,7 +466,7 @@ df
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
+      <th></th><th>boro_ordinal</th><th>salary</th><th>vegan</th></tr>
   </thead>
   <tbody>
     <tr><th>0</th><td>2</td><td>103</td><td>No</td></tr>

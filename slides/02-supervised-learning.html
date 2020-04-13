@@ -138,7 +138,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y)
 from sklearn.neighbors import KNeighborsClassifier
 knn = KNeighborsClassifier(n_neighbors=1)
 knn.fit(X_train, y_train)
-print("accuracy: {:.2f}".format(knn.score(X_test, y_test)))
+print("accuracy: ", knn.score(X_test, y_test)))
 y_pred = knn.predict(X_test)
 ```
 accuracy: 0.77
@@ -178,7 +178,7 @@ Who here has not seen this before?
 ---
 class: center
 
-# More neighbors
+# Influence of Number of Neighbors
 
 ![:scale 50%](images/knn_boundary_k1.png)
 
@@ -200,7 +200,7 @@ which can not be learned directly from the data.
 ---
 class: center
 
-# More neighbors
+# Influence of Number of Neighbors
 
 ![:scale 50%](images/knn_boundary_k3.png)
 
