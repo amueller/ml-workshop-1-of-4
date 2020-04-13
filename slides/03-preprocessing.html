@@ -597,58 +597,7 @@ pd.get_dummies(df, columns=['boro'])
 ???
 We can specify selectively which columns to apply the encoding to.
 
----
-# One-Hot (Dummy) Encoding
-.narrow-left-column[
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th><th>boro</th><th>salary</th><th>vegan</th></tr>
-  </thead>
-  <tbody>
-    <tr><th>0</th><td>2</td><td>103</td><td>No</td></tr>
-    <tr><th>1</th><td>3</td><td>89</td><td>No</td></tr>
-    <tr><th>2</th><td>2</td><td>142</td><td>No</td></tr>
-    <tr><th>3</th><td>1</td><td>54</td><td>Yes</td></tr>
-    <tr><th>4</th><td>1</td><td>63</td><td>Yes</td></tr>
-    <tr><th>5</th><td>0</td><td>219</td><td>No</td></tr>
-  </tbody>
-</table>
-]
-.wide-right-column[
-.tiny[
 
-```python
-pd.get_dummies(df_ordinal)
-```
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th><th>boro</th><th>salary</th><th>vegan_No</th><th>vegan_Yes</th></tr>
-  </thead>
-  <tbody>
-    <tr><th>0</th><td>2</td><td>103</td><td>1</td><td>0</td></tr>
-    <tr><th>1</th><td>3</td><td>89</td><td>1</td><td>0</td></tr>
-    <tr><th>2</th><td>2</td><td>142</td><td>1</td><td>0</td></tr>
-    <tr><th>3</th><td>1</td><td>54</td><td>0</td><td>1</td></tr>
-    <tr><th>4</th><td>1</td><td>63</td><td>0</td><td>1</td></tr>
-    <tr><th>5</th><td>0</td><td>219</td><td>1</td><td>0</td></tr>
-  </tbody>
-</table>
-]
-]
-???
-This also helps if the variable was already encoded using integers.
-Sometimes, someone has already encoded the categorical
-variables to integers like here. So here this is exactly the
-same information only except instead of strings you have
-them numbered. If you call the get_dummies on this nothing
-happens because none of them are object data types or
-categorical data types. If you want to look at the One Hot
-Encoding, you can explicitly pass columns equal and this
-will transform into boro_1, boro_2, boro_3.
-In this case get_dummies usually wouldn't do anything, but we can tell
-it which variables are categorical and it will dummy encode those for us.
 ---
 # One-Hot (Dummy) Encoding
 .narrow-left-column[
